@@ -1,0 +1,47 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build solution",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "${workspaceFolder}/NHCParser.Azure.sln"
+      ],
+      "problemMatcher": "$msCompile",
+      "group": "build"
+    },
+    {
+      "label": "run TropicalStorms.Api",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--project",
+        "${workspaceFolder}/src/TropicalStorms.Api/TropicalStorms.Api.csproj",
+        "--urls",
+        "http://127.0.0.1:5085"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "ASPNETCORE_ENVIRONMENT": "Development"
+        }
+      },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "run NHCParser.Function",
+      "type": "process",
+      "command": "func",
+      "args": [
+        "start"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/src/NHCParser.Function"
+      },
+      "problemMatcher": "$func-dotnet-watch"
+    }
+  ]
+}

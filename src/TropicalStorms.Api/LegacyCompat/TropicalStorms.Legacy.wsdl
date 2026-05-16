@@ -1,0 +1,2793 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.hurricanesoftware.com/services" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://www.hurricanesoftware.com/services" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.hurricanesoftware.com/services">
+      <s:element name="HelloWorld">
+        <s:complexType />
+      </s:element>
+      <s:element name="HelloWorldResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="HelloWorldResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetGISData">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetGISDataResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetGISDataResult" type="tns:ArrayOfGISData" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfGISData">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="GISData" nillable="true" type="tns:GISData" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="GISData">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseBusiness">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Title" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="URL" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="Active" type="s:boolean" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="BaseBusiness" />
+      <s:element name="GetStormOverlays">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetStormOverlaysResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStormOverlaysResult" type="tns:ArrayOfOVERLAYS" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfOVERLAYS">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="OVERLAYS" nillable="true" type="tns:OVERLAYS" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OVERLAYS">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="URL" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Type" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TextColor" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="HideLayers" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="LatitudeStart" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="LongitudeStart" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="LatitudeEnd" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="LongitudeEnd" type="s:double" />
+          <s:element minOccurs="0" maxOccurs="1" name="AnimationWildCard" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="MaxFrames" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="MaxLoops" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="MobileSatelliteTabAndroid">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="appTypeID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="regionType" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MobileSatelliteTabAndroidResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="MobileSatelliteTabAndroidResult" type="tns:ArrayOfSatelliteGroup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfSatelliteGroup">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SatelliteGroup" nillable="true" type="tns:SatelliteGroup" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SatelliteGroup">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Header" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SubHeader" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ThumbnailURL" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="GroupRegion" type="tns:RegionTypeEnum" />
+          <s:element minOccurs="0" maxOccurs="1" name="SatelliteItems" type="tns:ArrayOfSatelliteItem" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="RegionTypeEnum">
+        <s:restriction base="s:string">
+          <s:enumeration value="Unknown" />
+          <s:enumeration value="Atlantic" />
+          <s:enumeration value="EasternPacific" />
+          <s:enumeration value="NorthWestPacific" />
+          <s:enumeration value="SouthWestPacific" />
+          <s:enumeration value="SouthIndian" />
+          <s:enumeration value="NorthIndian" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfSatelliteItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SatelliteItem" nillable="true" type="tns:SatelliteItem" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SatelliteItem">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="SatelliteGroupID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ThumbnailURL" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="URL" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Text" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="MobileTabs">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="appTypeID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="regionType" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="tabToShowOn" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MobileTabsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="MobileTabsResult" type="tns:ArrayOfMobileTabGroup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfMobileTabGroup">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="MobileTabGroup" nillable="true" type="tns:MobileTabGroup" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="MobileTabGroup">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Header" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SubHeader" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ThumbnailURL" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="GroupRegion" type="tns:RegionTypeEnum" />
+          <s:element minOccurs="0" maxOccurs="1" name="MobileTabItems" type="tns:ArrayOfMobileTabItem" />
+          <s:element minOccurs="1" maxOccurs="1" name="TabToShowOn" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ApplicationType" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfMobileTabItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="MobileTabItem" nillable="true" type="tns:MobileTabItem" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="MobileTabItem">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="MobileTabGroupID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ThumbnailURL" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="URL" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Text" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ItemType" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="MobileSatelliteTab">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="appTypeID" type="tns:ApplicationTypeEnum" />
+            <s:element minOccurs="1" maxOccurs="1" name="regionType" type="tns:RegionTypeEnum" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="ApplicationTypeEnum">
+        <s:restriction base="s:string">
+          <s:enumeration value="Unknown" />
+          <s:enumeration value="TrackingTheEye" />
+          <s:enumeration value="HurricaneSoftwareGadget" />
+          <s:enumeration value="HurricaneSoftwareIPhone" />
+          <s:enumeration value="HurricaneSoftwareIPhoneFree" />
+          <s:enumeration value="HurricaneSoftwareForWindowsPhone" />
+          <s:enumeration value="HurricaneSoftwareForAndroid" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="MobileSatelliteTabResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="MobileSatelliteTabResult" type="tns:ArrayOfSatelliteGroup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateAlerts">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="alertTypeID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="email" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="appTypeID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="deviceID" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="regionType" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateAlertsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateAlertsResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateAlert">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="alertTypeID" type="tns:AlertTypeEnum" />
+            <s:element minOccurs="0" maxOccurs="1" name="email" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="appTypeID" type="tns:ApplicationTypeEnum" />
+            <s:element minOccurs="0" maxOccurs="1" name="deviceID" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="regionType" type="tns:RegionTypeEnum" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="AlertTypeEnum">
+        <s:restriction base="s:string">
+          <s:enumeration value="Unknown" />
+          <s:enumeration value="Email" />
+          <s:enumeration value="CellPhone" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="CreateAlertResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateAlertResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RemoveAlert">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="value" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="region" type="tns:RegionTypeEnum" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RemoveAlertResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RemoveAlertResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PointsOfInterest">
+        <s:complexType />
+      </s:element>
+      <s:element name="PointsOfInterestResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PointsOfInterestResult" type="tns:ArrayOfPointOfInterest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfPointOfInterest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PointOfInterest" nillable="true" type="tns:PointOfInterest" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PointOfInterest">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Latitude" type="s:float" />
+          <s:element minOccurs="1" maxOccurs="1" name="Longitude" type="s:float" />
+          <s:element minOccurs="0" maxOccurs="1" name="RelatedText" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Type" type="tns:PointOfInteretType" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="PointOfInteretType">
+        <s:restriction base="s:string">
+          <s:enumeration value="ReconFlight" />
+          <s:enumeration value="TropicalWave" />
+          <s:enumeration value="PointOfInterest" />
+          <s:enumeration value="Investigation" />
+          <s:enumeration value="AreaOfInterest" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="GetRegCode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="userID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetRegCodeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetRegCodeResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RetrieveRegistration">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RetrieveRegistrationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RetrieveRegistrationResult" type="tns:ReturnMessage" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ReturnMessage">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="MessageNumber" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="LoginUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="userID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="registrationNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="osBinaryTime" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="numberOfTimesLoggedIn" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="isRegistered" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="TTEVersion" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="promo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LoginUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LoginUserResult" type="tns:User" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="User">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseBusiness">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="VersionInfo" type="tns:VersionInfo" />
+              <s:element minOccurs="1" maxOccurs="1" name="LoginMessageType" type="tns:AppLinksType" />
+              <s:element minOccurs="1" maxOccurs="1" name="ShowLoginMessage" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="LoggedIn" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="NeedToRegister" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="RunningLatestVersion" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="AppLinks" type="tns:ArrayOfAppLink" />
+              <s:element minOccurs="0" maxOccurs="1" name="ReturnMessage" type="tns:ReturnMessage" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="VersionInfo">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseBusiness">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="SharewareLimit" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="RunningLatestVersion" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="RequiredUpdate" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="LatestVersion" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="DownloadLocation" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="ReturnMessage" type="tns:ReturnMessage" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:simpleType name="AppLinksType">
+        <s:restriction base="s:string">
+          <s:enumeration value="All" />
+          <s:enumeration value="SatelliteImages" />
+          <s:enumeration value="TropicalWeatherOutlook" />
+          <s:enumeration value="TropicalWeatherDiscussion" />
+          <s:enumeration value="Summary" />
+          <s:enumeration value="ForecastAdvisory" />
+          <s:enumeration value="StormDiscussion" />
+          <s:enumeration value="PublicAdvisory" />
+          <s:enumeration value="NOAARecon" />
+          <s:enumeration value="EmailPhoneAlerts" />
+          <s:enumeration value="WirelessTracking" />
+          <s:enumeration value="MyAccountTab" />
+          <s:enumeration value="OrderPage" />
+          <s:enumeration value="LoginMessage" />
+          <s:enumeration value="LoginMessageRegistrationExpired" />
+          <s:enumeration value="LoginMessageSharewareLimit" />
+          <s:enumeration value="LoginMessageMultiUser" />
+          <s:enumeration value="LoginMessageHacker" />
+          <s:enumeration value="LearnHowToSubscribe" />
+          <s:enumeration value="HomePage" />
+          <s:enumeration value="NewsDesktopTab" />
+          <s:enumeration value="FacebookDesktopTab" />
+          <s:enumeration value="TwitterDesktopTab" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfAppLink">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="AppLink" nillable="true" type="tns:AppLink" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="AppLink">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="URL" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Region" type="tns:RegionType" />
+          <s:element minOccurs="1" maxOccurs="1" name="appLinksType" type="tns:AppLinksType" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="RegionType">
+        <s:restriction base="s:string">
+          <s:enumeration value="All" />
+          <s:enumeration value="Atlantic" />
+          <s:enumeration value="EasterPacific" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="AppLinksAndroid">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="userID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="registrationNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="osBinaryTime" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="numberOfTimesLoggedIn" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="promo" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="appLinkType" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="regionType" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AppLinksAndroidResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AppLinksAndroidResult" type="tns:ArrayOfAppLink" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AppLinks">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="userID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="registrationNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="osBinaryTime" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="numberOfTimesLoggedIn" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="promo" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="appLinkType" type="tns:AppLinksType" />
+            <s:element minOccurs="1" maxOccurs="1" name="regionType" type="tns:RegionTypeEnum" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AppLinksResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AppLinksResult" type="tns:ArrayOfAppLink" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="VersionCheck">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ApplicationType" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="version" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="promo" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="getzip" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="VersionCheckResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="VersionCheckResult" type="tns:VersionInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ValidateUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="userID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="registrationNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ValidateUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ValidateUserResult" type="tns:ReturnMessage" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTimeStamp">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="region" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTimeStampResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetTimeStampResult" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="StormNames">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="region" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="activeOnly" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="StormNamesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="StormNamesResult" type="tns:ArrayOfStorm" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfStorm">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Storm" nillable="true" type="tns:Storm" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Storm">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseBusiness">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="GISFiles" type="tns:ArrayOfGISFile" />
+              <s:element minOccurs="0" maxOccurs="1" name="ImageLinks" type="tns:ArrayOfImageLink" />
+              <s:element minOccurs="0" maxOccurs="1" name="Coordinates" type="tns:ArrayOfCoordinate" />
+              <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="StormID" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="NameYear" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Region" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="Year" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="Active" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="StormType" type="tns:StormTypeEnum" />
+              <s:element minOccurs="1" maxOccurs="1" name="IsModified" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="EmailAlertsSent" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="StormNumber" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="Details" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="ImageURL" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfGISFile">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="GISFile" nillable="true" type="tns:GISFile" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="GISFile">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="URL" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FileName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="GISFileType" type="tns:GISFileTypes" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="GISFileTypes">
+        <s:restriction base="s:string">
+          <s:enumeration value="All" />
+          <s:enumeration value="SHP" />
+          <s:enumeration value="DBF" />
+          <s:enumeration value="SHX" />
+          <s:enumeration value="PRJ" />
+          <s:enumeration value="MPL" />
+          <s:enumeration value="XML" />
+          <s:enumeration value="ZIP" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfImageLink">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ImageLink" nillable="true" type="tns:ImageLink" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ImageLink">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ImageLinkID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ImageLinkType" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="StormID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="URL" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="DateUpated" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfCoordinate">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Coordinate" nillable="true" type="tns:Coordinate" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Coordinate">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseBusiness">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="StormID" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="StormNumber" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="AdvisoryNumber" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="Latitude" type="s:float" />
+              <s:element minOccurs="1" maxOccurs="1" name="Longitude" type="s:float" />
+              <s:element minOccurs="1" maxOccurs="1" name="WindSpeed" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="WindSpeedKts" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="SpeedTravel" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="SpeedTravelKts" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="Pressure" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="Direction" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="DirectionDegrees" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="DirectionStr" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Heading" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="StormType" type="tns:StormTypeEnum" />
+              <s:element minOccurs="0" maxOccurs="1" name="UTCOffset" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="DateTime" type="s:dateTime" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:simpleType name="StormTypeEnum">
+        <s:restriction base="s:string">
+          <s:enumeration value="Unknown" />
+          <s:enumeration value="TropicalDepression" />
+          <s:enumeration value="SubTropicalStorm" />
+          <s:enumeration value="TropicalStorm" />
+          <s:enumeration value="Hurricane" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="GetDistanceBetweenPoints">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="startLat" type="s:double" />
+            <s:element minOccurs="1" maxOccurs="1" name="startLong" type="s:double" />
+            <s:element minOccurs="1" maxOccurs="1" name="endLat" type="s:double" />
+            <s:element minOccurs="1" maxOccurs="1" name="endLon" type="s:double" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDistanceBetweenPointsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetDistanceBetweenPointsResult" type="s:double" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStorm">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="stormID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="withImageLinks" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStormResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStormResult" type="tns:Storm" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetGadget">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="region" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="GadgetType" type="tns:GadgetType" />
+            <s:element minOccurs="0" maxOccurs="1" name="Version" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="GadgetType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Unknown" />
+          <s:enumeration value="Windows" />
+          <s:enumeration value="iPhone" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="GetGadgetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetGadgetResult" type="tns:Gadget" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="Gadget">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseBusiness">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="Timer" type="s:double" />
+              <s:element minOccurs="0" maxOccurs="1" name="VersionInfo" type="tns:VersionInfo" />
+              <s:element minOccurs="0" maxOccurs="1" name="Storms" type="tns:ArrayOfStorm" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="Storms">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="StormsToDownload" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="region" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="withImageLinks" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="activeOnly" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="lastCoordinateOnly" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="omitForecastsToo" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="StormsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="StormsResult" type="tns:ArrayOfStorm" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCoordinates">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="StormID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCoordinatesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCoordinatesResult" type="tns:ArrayOfCoordinate" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ImageLinks">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="stormID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="imageLinkType" type="tns:ImageLinkType" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="ImageLinkType">
+        <s:restriction base="s:string">
+          <s:enumeration value="All" />
+          <s:enumeration value="GoesVis" />
+          <s:enumeration value="GoesIR" />
+          <s:enumeration value="GoesWV" />
+          <s:enumeration value="GoesVisFull" />
+          <s:enumeration value="GoesIRFull" />
+          <s:enumeration value="GoesWVFull" />
+          <s:enumeration value="GoesColorVis" />
+          <s:enumeration value="GoesColorIR" />
+          <s:enumeration value="GoesColorWV" />
+          <s:enumeration value="SSTDaily" />
+          <s:enumeration value="SST7Day" />
+          <s:enumeration value="NationalRadarSmall" />
+          <s:enumeration value="NationalRadarLarge" />
+          <s:enumeration value="NavyVis" />
+          <s:enumeration value="NavyIR" />
+          <s:enumeration value="NavyWV" />
+          <s:enumeration value="MeteosatVis" />
+          <s:enumeration value="MeteosatIR" />
+          <s:enumeration value="NavyIRAtlanticInvest" />
+          <s:enumeration value="NHC5DayWatchesAndWarnings" />
+          <s:enumeration value="NHCHurricaneForceWinds" />
+          <s:enumeration value="NHC50KnotWind" />
+          <s:enumeration value="NHCTropicalStormForceWind" />
+          <s:enumeration value="NHCWindSpeedTable" />
+          <s:enumeration value="NHC3DayWatchesAndWarnings" />
+          <s:enumeration value="NHCMarinersRule" />
+          <s:enumeration value="NHCWindHistory" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="ImageLinksResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ImageLinksResult" type="tns:ArrayOfImageLink" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStormNames">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="region" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStormNamesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStormNamesResult" type="tns:ArrayOfSTORM" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfSTORM">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="STORM" nillable="true" type="tns:STORM" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="STORM">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="NAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="YEAR" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="REGION" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ERROR_DESCRIPTION" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetStormsDataset">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="StormsToDownload" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="region" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStormsDatasetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStormsDatasetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="string" nillable="true" type="s:string" />
+      <s:element name="ArrayOfGISData" nillable="true" type="tns:ArrayOfGISData" />
+      <s:element name="ArrayOfOVERLAYS" nillable="true" type="tns:ArrayOfOVERLAYS" />
+      <s:element name="ArrayOfSatelliteGroup" nillable="true" type="tns:ArrayOfSatelliteGroup" />
+      <s:element name="ArrayOfMobileTabGroup" nillable="true" type="tns:ArrayOfMobileTabGroup" />
+      <s:element name="ArrayOfPointOfInterest" nillable="true" type="tns:ArrayOfPointOfInterest" />
+      <s:element name="ReturnMessage" nillable="true" type="tns:ReturnMessage" />
+      <s:element name="User" nillable="true" type="tns:User" />
+      <s:element name="ArrayOfAppLink" nillable="true" type="tns:ArrayOfAppLink" />
+      <s:element name="VersionInfo" nillable="true" type="tns:VersionInfo" />
+      <s:element name="dateTime" type="s:dateTime" />
+      <s:element name="ArrayOfStorm" nillable="true" type="tns:ArrayOfStorm" />
+      <s:element name="double" type="s:double" />
+      <s:element name="Storm" nillable="true" type="tns:Storm" />
+      <s:element name="Gadget" nillable="true" type="tns:Gadget" />
+      <s:element name="ArrayOfCoordinate" nillable="true" type="tns:ArrayOfCoordinate" />
+      <s:element name="ArrayOfImageLink" nillable="true" type="tns:ArrayOfImageLink" />
+      <s:element name="ArrayOfSTORM" nillable="true" type="tns:ArrayOfSTORM" />
+      <s:element name="DataSet" nillable="true">
+        <s:complexType>
+          <s:sequence>
+            <s:element ref="s:schema" />
+            <s:any />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="HelloWorldSoapIn">
+    <wsdl:part name="parameters" element="tns:HelloWorld" />
+  </wsdl:message>
+  <wsdl:message name="HelloWorldSoapOut">
+    <wsdl:part name="parameters" element="tns:HelloWorldResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetGISDataSoapIn">
+    <wsdl:part name="parameters" element="tns:GetGISData" />
+  </wsdl:message>
+  <wsdl:message name="GetGISDataSoapOut">
+    <wsdl:part name="parameters" element="tns:GetGISDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStormOverlaysSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStormOverlays" />
+  </wsdl:message>
+  <wsdl:message name="GetStormOverlaysSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStormOverlaysResponse" />
+  </wsdl:message>
+  <wsdl:message name="MobileSatelliteTabAndroidSoapIn">
+    <wsdl:part name="parameters" element="tns:MobileSatelliteTabAndroid" />
+  </wsdl:message>
+  <wsdl:message name="MobileSatelliteTabAndroidSoapOut">
+    <wsdl:part name="parameters" element="tns:MobileSatelliteTabAndroidResponse" />
+  </wsdl:message>
+  <wsdl:message name="MobileTabsSoapIn">
+    <wsdl:part name="parameters" element="tns:MobileTabs" />
+  </wsdl:message>
+  <wsdl:message name="MobileTabsSoapOut">
+    <wsdl:part name="parameters" element="tns:MobileTabsResponse" />
+  </wsdl:message>
+  <wsdl:message name="MobileSatelliteTabSoapIn">
+    <wsdl:part name="parameters" element="tns:MobileSatelliteTab" />
+  </wsdl:message>
+  <wsdl:message name="MobileSatelliteTabSoapOut">
+    <wsdl:part name="parameters" element="tns:MobileSatelliteTabResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateAlertsSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateAlerts" />
+  </wsdl:message>
+  <wsdl:message name="CreateAlertsSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateAlertsResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateAlertSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateAlert" />
+  </wsdl:message>
+  <wsdl:message name="CreateAlertSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateAlertResponse" />
+  </wsdl:message>
+  <wsdl:message name="RemoveAlertSoapIn">
+    <wsdl:part name="parameters" element="tns:RemoveAlert" />
+  </wsdl:message>
+  <wsdl:message name="RemoveAlertSoapOut">
+    <wsdl:part name="parameters" element="tns:RemoveAlertResponse" />
+  </wsdl:message>
+  <wsdl:message name="PointsOfInterestSoapIn">
+    <wsdl:part name="parameters" element="tns:PointsOfInterest" />
+  </wsdl:message>
+  <wsdl:message name="PointsOfInterestSoapOut">
+    <wsdl:part name="parameters" element="tns:PointsOfInterestResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetRegCodeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetRegCode" />
+  </wsdl:message>
+  <wsdl:message name="GetRegCodeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetRegCodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="RetrieveRegistrationSoapIn">
+    <wsdl:part name="parameters" element="tns:RetrieveRegistration" />
+  </wsdl:message>
+  <wsdl:message name="RetrieveRegistrationSoapOut">
+    <wsdl:part name="parameters" element="tns:RetrieveRegistrationResponse" />
+  </wsdl:message>
+  <wsdl:message name="LoginUserSoapIn">
+    <wsdl:part name="parameters" element="tns:LoginUser" />
+  </wsdl:message>
+  <wsdl:message name="LoginUserSoapOut">
+    <wsdl:part name="parameters" element="tns:LoginUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="AppLinksAndroidSoapIn">
+    <wsdl:part name="parameters" element="tns:AppLinksAndroid" />
+  </wsdl:message>
+  <wsdl:message name="AppLinksAndroidSoapOut">
+    <wsdl:part name="parameters" element="tns:AppLinksAndroidResponse" />
+  </wsdl:message>
+  <wsdl:message name="AppLinksSoapIn">
+    <wsdl:part name="parameters" element="tns:AppLinks" />
+  </wsdl:message>
+  <wsdl:message name="AppLinksSoapOut">
+    <wsdl:part name="parameters" element="tns:AppLinksResponse" />
+  </wsdl:message>
+  <wsdl:message name="VersionCheckSoapIn">
+    <wsdl:part name="parameters" element="tns:VersionCheck" />
+  </wsdl:message>
+  <wsdl:message name="VersionCheckSoapOut">
+    <wsdl:part name="parameters" element="tns:VersionCheckResponse" />
+  </wsdl:message>
+  <wsdl:message name="ValidateUserSoapIn">
+    <wsdl:part name="parameters" element="tns:ValidateUser" />
+  </wsdl:message>
+  <wsdl:message name="ValidateUserSoapOut">
+    <wsdl:part name="parameters" element="tns:ValidateUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTimeStampSoapIn">
+    <wsdl:part name="parameters" element="tns:GetTimeStamp" />
+  </wsdl:message>
+  <wsdl:message name="GetTimeStampSoapOut">
+    <wsdl:part name="parameters" element="tns:GetTimeStampResponse" />
+  </wsdl:message>
+  <wsdl:message name="StormNamesSoapIn">
+    <wsdl:part name="parameters" element="tns:StormNames" />
+  </wsdl:message>
+  <wsdl:message name="StormNamesSoapOut">
+    <wsdl:part name="parameters" element="tns:StormNamesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDistanceBetweenPointsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDistanceBetweenPoints" />
+  </wsdl:message>
+  <wsdl:message name="GetDistanceBetweenPointsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDistanceBetweenPointsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStormSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStorm" />
+  </wsdl:message>
+  <wsdl:message name="GetStormSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStormResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetGadgetSoapIn">
+    <wsdl:part name="parameters" element="tns:GetGadget" />
+  </wsdl:message>
+  <wsdl:message name="GetGadgetSoapOut">
+    <wsdl:part name="parameters" element="tns:GetGadgetResponse" />
+  </wsdl:message>
+  <wsdl:message name="StormsSoapIn">
+    <wsdl:part name="parameters" element="tns:Storms" />
+  </wsdl:message>
+  <wsdl:message name="StormsSoapOut">
+    <wsdl:part name="parameters" element="tns:StormsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCoordinatesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCoordinates" />
+  </wsdl:message>
+  <wsdl:message name="GetCoordinatesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCoordinatesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ImageLinksSoapIn">
+    <wsdl:part name="parameters" element="tns:ImageLinks" />
+  </wsdl:message>
+  <wsdl:message name="ImageLinksSoapOut">
+    <wsdl:part name="parameters" element="tns:ImageLinksResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStormNamesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStormNames" />
+  </wsdl:message>
+  <wsdl:message name="GetStormNamesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStormNamesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStormsDatasetSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStormsDataset" />
+  </wsdl:message>
+  <wsdl:message name="GetStormsDatasetSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStormsDatasetResponse" />
+  </wsdl:message>
+  <wsdl:message name="HelloWorldHttpGetIn" />
+  <wsdl:message name="HelloWorldHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetGISDataHttpGetIn" />
+  <wsdl:message name="GetGISDataHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfGISData" />
+  </wsdl:message>
+  <wsdl:message name="GetStormOverlaysHttpGetIn" />
+  <wsdl:message name="GetStormOverlaysHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfOVERLAYS" />
+  </wsdl:message>
+  <wsdl:message name="MobileSatelliteTabAndroidHttpGetIn">
+    <wsdl:part name="appTypeID" type="s:string" />
+    <wsdl:part name="regionType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="MobileSatelliteTabAndroidHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfSatelliteGroup" />
+  </wsdl:message>
+  <wsdl:message name="MobileTabsHttpGetIn">
+    <wsdl:part name="appTypeID" type="s:string" />
+    <wsdl:part name="regionType" type="s:string" />
+    <wsdl:part name="tabToShowOn" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="MobileTabsHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfMobileTabGroup" />
+  </wsdl:message>
+  <wsdl:message name="MobileSatelliteTabHttpGetIn">
+    <wsdl:part name="appTypeID" type="s:string" />
+    <wsdl:part name="regionType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="MobileSatelliteTabHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfSatelliteGroup" />
+  </wsdl:message>
+  <wsdl:message name="CreateAlertsHttpGetIn">
+    <wsdl:part name="alertTypeID" type="s:string" />
+    <wsdl:part name="email" type="s:string" />
+    <wsdl:part name="appTypeID" type="s:string" />
+    <wsdl:part name="deviceID" type="s:string" />
+    <wsdl:part name="regionType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CreateAlertsHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="CreateAlertHttpGetIn">
+    <wsdl:part name="alertTypeID" type="s:string" />
+    <wsdl:part name="email" type="s:string" />
+    <wsdl:part name="appTypeID" type="s:string" />
+    <wsdl:part name="deviceID" type="s:string" />
+    <wsdl:part name="regionType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CreateAlertHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="RemoveAlertHttpGetIn">
+    <wsdl:part name="value" type="s:string" />
+    <wsdl:part name="region" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="RemoveAlertHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="PointsOfInterestHttpGetIn" />
+  <wsdl:message name="PointsOfInterestHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfPointOfInterest" />
+  </wsdl:message>
+  <wsdl:message name="GetRegCodeHttpGetIn">
+    <wsdl:part name="userID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetRegCodeHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="RetrieveRegistrationHttpGetIn">
+    <wsdl:part name="Email" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="RetrieveRegistrationHttpGetOut">
+    <wsdl:part name="Body" element="tns:ReturnMessage" />
+  </wsdl:message>
+  <wsdl:message name="LoginUserHttpGetIn">
+    <wsdl:part name="userID" type="s:string" />
+    <wsdl:part name="registrationNumber" type="s:string" />
+    <wsdl:part name="osBinaryTime" type="s:string" />
+    <wsdl:part name="numberOfTimesLoggedIn" type="s:string" />
+    <wsdl:part name="isRegistered" type="s:string" />
+    <wsdl:part name="TTEVersion" type="s:string" />
+    <wsdl:part name="promo" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LoginUserHttpGetOut">
+    <wsdl:part name="Body" element="tns:User" />
+  </wsdl:message>
+  <wsdl:message name="AppLinksAndroidHttpGetIn">
+    <wsdl:part name="userID" type="s:string" />
+    <wsdl:part name="registrationNumber" type="s:string" />
+    <wsdl:part name="osBinaryTime" type="s:string" />
+    <wsdl:part name="numberOfTimesLoggedIn" type="s:string" />
+    <wsdl:part name="promo" type="s:string" />
+    <wsdl:part name="appLinkType" type="s:string" />
+    <wsdl:part name="regionType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AppLinksAndroidHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfAppLink" />
+  </wsdl:message>
+  <wsdl:message name="AppLinksHttpGetIn">
+    <wsdl:part name="userID" type="s:string" />
+    <wsdl:part name="registrationNumber" type="s:string" />
+    <wsdl:part name="osBinaryTime" type="s:string" />
+    <wsdl:part name="numberOfTimesLoggedIn" type="s:string" />
+    <wsdl:part name="promo" type="s:string" />
+    <wsdl:part name="appLinkType" type="s:string" />
+    <wsdl:part name="regionType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AppLinksHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfAppLink" />
+  </wsdl:message>
+  <wsdl:message name="VersionCheckHttpGetIn">
+    <wsdl:part name="ApplicationType" type="s:string" />
+    <wsdl:part name="version" type="s:string" />
+    <wsdl:part name="promo" type="s:string" />
+    <wsdl:part name="getzip" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="VersionCheckHttpGetOut">
+    <wsdl:part name="Body" element="tns:VersionInfo" />
+  </wsdl:message>
+  <wsdl:message name="ValidateUserHttpGetIn">
+    <wsdl:part name="userID" type="s:string" />
+    <wsdl:part name="registrationNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ValidateUserHttpGetOut">
+    <wsdl:part name="Body" element="tns:ReturnMessage" />
+  </wsdl:message>
+  <wsdl:message name="GetTimeStampHttpGetIn">
+    <wsdl:part name="region" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTimeStampHttpGetOut">
+    <wsdl:part name="Body" element="tns:dateTime" />
+  </wsdl:message>
+  <wsdl:message name="StormNamesHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="region" type="s:string" />
+    <wsdl:part name="activeOnly" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="StormNamesHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfStorm" />
+  </wsdl:message>
+  <wsdl:message name="GetDistanceBetweenPointsHttpGetIn">
+    <wsdl:part name="startLat" type="s:string" />
+    <wsdl:part name="startLong" type="s:string" />
+    <wsdl:part name="endLat" type="s:string" />
+    <wsdl:part name="endLon" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDistanceBetweenPointsHttpGetOut">
+    <wsdl:part name="Body" element="tns:double" />
+  </wsdl:message>
+  <wsdl:message name="GetStormHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="stormID" type="s:string" />
+    <wsdl:part name="withImageLinks" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetStormHttpGetOut">
+    <wsdl:part name="Body" element="tns:Storm" />
+  </wsdl:message>
+  <wsdl:message name="GetGadgetHttpGetIn">
+    <wsdl:part name="region" type="s:string" />
+    <wsdl:part name="GadgetType" type="s:string" />
+    <wsdl:part name="Version" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetGadgetHttpGetOut">
+    <wsdl:part name="Body" element="tns:Gadget" />
+  </wsdl:message>
+  <wsdl:message name="StormsHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="StormsToDownload" type="s:string" />
+    <wsdl:part name="region" type="s:string" />
+    <wsdl:part name="withImageLinks" type="s:string" />
+    <wsdl:part name="activeOnly" type="s:string" />
+    <wsdl:part name="lastCoordinateOnly" type="s:string" />
+    <wsdl:part name="omitForecastsToo" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="StormsHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfStorm" />
+  </wsdl:message>
+  <wsdl:message name="GetCoordinatesHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="StormID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetCoordinatesHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCoordinate" />
+  </wsdl:message>
+  <wsdl:message name="ImageLinksHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="stormID" type="s:string" />
+    <wsdl:part name="imageLinkType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ImageLinksHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfImageLink" />
+  </wsdl:message>
+  <wsdl:message name="GetStormNamesHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="region" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetStormNamesHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfSTORM" />
+  </wsdl:message>
+  <wsdl:message name="GetStormsDatasetHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="StormsToDownload" type="s:string" />
+    <wsdl:part name="region" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetStormsDatasetHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataSet" />
+  </wsdl:message>
+  <wsdl:message name="HelloWorldHttpPostIn" />
+  <wsdl:message name="HelloWorldHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetGISDataHttpPostIn" />
+  <wsdl:message name="GetGISDataHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfGISData" />
+  </wsdl:message>
+  <wsdl:message name="GetStormOverlaysHttpPostIn" />
+  <wsdl:message name="GetStormOverlaysHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfOVERLAYS" />
+  </wsdl:message>
+  <wsdl:message name="MobileSatelliteTabAndroidHttpPostIn">
+    <wsdl:part name="appTypeID" type="s:string" />
+    <wsdl:part name="regionType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="MobileSatelliteTabAndroidHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfSatelliteGroup" />
+  </wsdl:message>
+  <wsdl:message name="MobileTabsHttpPostIn">
+    <wsdl:part name="appTypeID" type="s:string" />
+    <wsdl:part name="regionType" type="s:string" />
+    <wsdl:part name="tabToShowOn" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="MobileTabsHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfMobileTabGroup" />
+  </wsdl:message>
+  <wsdl:message name="MobileSatelliteTabHttpPostIn">
+    <wsdl:part name="appTypeID" type="s:string" />
+    <wsdl:part name="regionType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="MobileSatelliteTabHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfSatelliteGroup" />
+  </wsdl:message>
+  <wsdl:message name="CreateAlertsHttpPostIn">
+    <wsdl:part name="alertTypeID" type="s:string" />
+    <wsdl:part name="email" type="s:string" />
+    <wsdl:part name="appTypeID" type="s:string" />
+    <wsdl:part name="deviceID" type="s:string" />
+    <wsdl:part name="regionType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CreateAlertsHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="CreateAlertHttpPostIn">
+    <wsdl:part name="alertTypeID" type="s:string" />
+    <wsdl:part name="email" type="s:string" />
+    <wsdl:part name="appTypeID" type="s:string" />
+    <wsdl:part name="deviceID" type="s:string" />
+    <wsdl:part name="regionType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CreateAlertHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="RemoveAlertHttpPostIn">
+    <wsdl:part name="value" type="s:string" />
+    <wsdl:part name="region" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="RemoveAlertHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="PointsOfInterestHttpPostIn" />
+  <wsdl:message name="PointsOfInterestHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfPointOfInterest" />
+  </wsdl:message>
+  <wsdl:message name="GetRegCodeHttpPostIn">
+    <wsdl:part name="userID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetRegCodeHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="RetrieveRegistrationHttpPostIn">
+    <wsdl:part name="Email" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="RetrieveRegistrationHttpPostOut">
+    <wsdl:part name="Body" element="tns:ReturnMessage" />
+  </wsdl:message>
+  <wsdl:message name="LoginUserHttpPostIn">
+    <wsdl:part name="userID" type="s:string" />
+    <wsdl:part name="registrationNumber" type="s:string" />
+    <wsdl:part name="osBinaryTime" type="s:string" />
+    <wsdl:part name="numberOfTimesLoggedIn" type="s:string" />
+    <wsdl:part name="isRegistered" type="s:string" />
+    <wsdl:part name="TTEVersion" type="s:string" />
+    <wsdl:part name="promo" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LoginUserHttpPostOut">
+    <wsdl:part name="Body" element="tns:User" />
+  </wsdl:message>
+  <wsdl:message name="AppLinksAndroidHttpPostIn">
+    <wsdl:part name="userID" type="s:string" />
+    <wsdl:part name="registrationNumber" type="s:string" />
+    <wsdl:part name="osBinaryTime" type="s:string" />
+    <wsdl:part name="numberOfTimesLoggedIn" type="s:string" />
+    <wsdl:part name="promo" type="s:string" />
+    <wsdl:part name="appLinkType" type="s:string" />
+    <wsdl:part name="regionType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AppLinksAndroidHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfAppLink" />
+  </wsdl:message>
+  <wsdl:message name="AppLinksHttpPostIn">
+    <wsdl:part name="userID" type="s:string" />
+    <wsdl:part name="registrationNumber" type="s:string" />
+    <wsdl:part name="osBinaryTime" type="s:string" />
+    <wsdl:part name="numberOfTimesLoggedIn" type="s:string" />
+    <wsdl:part name="promo" type="s:string" />
+    <wsdl:part name="appLinkType" type="s:string" />
+    <wsdl:part name="regionType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AppLinksHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfAppLink" />
+  </wsdl:message>
+  <wsdl:message name="VersionCheckHttpPostIn">
+    <wsdl:part name="ApplicationType" type="s:string" />
+    <wsdl:part name="version" type="s:string" />
+    <wsdl:part name="promo" type="s:string" />
+    <wsdl:part name="getzip" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="VersionCheckHttpPostOut">
+    <wsdl:part name="Body" element="tns:VersionInfo" />
+  </wsdl:message>
+  <wsdl:message name="ValidateUserHttpPostIn">
+    <wsdl:part name="userID" type="s:string" />
+    <wsdl:part name="registrationNumber" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ValidateUserHttpPostOut">
+    <wsdl:part name="Body" element="tns:ReturnMessage" />
+  </wsdl:message>
+  <wsdl:message name="GetTimeStampHttpPostIn">
+    <wsdl:part name="region" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTimeStampHttpPostOut">
+    <wsdl:part name="Body" element="tns:dateTime" />
+  </wsdl:message>
+  <wsdl:message name="StormNamesHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="region" type="s:string" />
+    <wsdl:part name="activeOnly" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="StormNamesHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfStorm" />
+  </wsdl:message>
+  <wsdl:message name="GetDistanceBetweenPointsHttpPostIn">
+    <wsdl:part name="startLat" type="s:string" />
+    <wsdl:part name="startLong" type="s:string" />
+    <wsdl:part name="endLat" type="s:string" />
+    <wsdl:part name="endLon" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDistanceBetweenPointsHttpPostOut">
+    <wsdl:part name="Body" element="tns:double" />
+  </wsdl:message>
+  <wsdl:message name="GetStormHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="stormID" type="s:string" />
+    <wsdl:part name="withImageLinks" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetStormHttpPostOut">
+    <wsdl:part name="Body" element="tns:Storm" />
+  </wsdl:message>
+  <wsdl:message name="GetGadgetHttpPostIn">
+    <wsdl:part name="region" type="s:string" />
+    <wsdl:part name="GadgetType" type="s:string" />
+    <wsdl:part name="Version" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetGadgetHttpPostOut">
+    <wsdl:part name="Body" element="tns:Gadget" />
+  </wsdl:message>
+  <wsdl:message name="StormsHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="StormsToDownload" type="s:string" />
+    <wsdl:part name="region" type="s:string" />
+    <wsdl:part name="withImageLinks" type="s:string" />
+    <wsdl:part name="activeOnly" type="s:string" />
+    <wsdl:part name="lastCoordinateOnly" type="s:string" />
+    <wsdl:part name="omitForecastsToo" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="StormsHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfStorm" />
+  </wsdl:message>
+  <wsdl:message name="GetCoordinatesHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="StormID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetCoordinatesHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCoordinate" />
+  </wsdl:message>
+  <wsdl:message name="ImageLinksHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="stormID" type="s:string" />
+    <wsdl:part name="imageLinkType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ImageLinksHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfImageLink" />
+  </wsdl:message>
+  <wsdl:message name="GetStormNamesHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="region" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetStormNamesHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfSTORM" />
+  </wsdl:message>
+  <wsdl:message name="GetStormsDatasetHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="StormsToDownload" type="s:string" />
+    <wsdl:part name="region" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetStormsDatasetHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataSet" />
+  </wsdl:message>
+  <wsdl:portType name="TropicalStormInfoSoap">
+    <wsdl:operation name="HelloWorld">
+      <wsdl:input message="tns:HelloWorldSoapIn" />
+      <wsdl:output message="tns:HelloWorldSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGISData">
+      <wsdl:input message="tns:GetGISDataSoapIn" />
+      <wsdl:output message="tns:GetGISDataSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStormOverlays">
+      <wsdl:input message="tns:GetStormOverlaysSoapIn" />
+      <wsdl:output message="tns:GetStormOverlaysSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MobileSatelliteTabAndroid">
+      <wsdl:input message="tns:MobileSatelliteTabAndroidSoapIn" />
+      <wsdl:output message="tns:MobileSatelliteTabAndroidSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MobileTabs">
+      <wsdl:input message="tns:MobileTabsSoapIn" />
+      <wsdl:output message="tns:MobileTabsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MobileSatelliteTab">
+      <wsdl:input message="tns:MobileSatelliteTabSoapIn" />
+      <wsdl:output message="tns:MobileSatelliteTabSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateAlerts">
+      <wsdl:input message="tns:CreateAlertsSoapIn" />
+      <wsdl:output message="tns:CreateAlertsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateAlert">
+      <wsdl:input message="tns:CreateAlertSoapIn" />
+      <wsdl:output message="tns:CreateAlertSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveAlert">
+      <wsdl:input message="tns:RemoveAlertSoapIn" />
+      <wsdl:output message="tns:RemoveAlertSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PointsOfInterest">
+      <wsdl:input message="tns:PointsOfInterestSoapIn" />
+      <wsdl:output message="tns:PointsOfInterestSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRegCode">
+      <wsdl:input message="tns:GetRegCodeSoapIn" />
+      <wsdl:output message="tns:GetRegCodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RetrieveRegistration">
+      <wsdl:input message="tns:RetrieveRegistrationSoapIn" />
+      <wsdl:output message="tns:RetrieveRegistrationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LoginUser">
+      <wsdl:input message="tns:LoginUserSoapIn" />
+      <wsdl:output message="tns:LoginUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AppLinksAndroid">
+      <wsdl:input message="tns:AppLinksAndroidSoapIn" />
+      <wsdl:output message="tns:AppLinksAndroidSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AppLinks">
+      <wsdl:input message="tns:AppLinksSoapIn" />
+      <wsdl:output message="tns:AppLinksSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="VersionCheck">
+      <wsdl:input message="tns:VersionCheckSoapIn" />
+      <wsdl:output message="tns:VersionCheckSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ValidateUser">
+      <wsdl:input message="tns:ValidateUserSoapIn" />
+      <wsdl:output message="tns:ValidateUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTimeStamp">
+      <wsdl:input message="tns:GetTimeStampSoapIn" />
+      <wsdl:output message="tns:GetTimeStampSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="StormNames">
+      <wsdl:input message="tns:StormNamesSoapIn" />
+      <wsdl:output message="tns:StormNamesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDistanceBetweenPoints">
+      <wsdl:input message="tns:GetDistanceBetweenPointsSoapIn" />
+      <wsdl:output message="tns:GetDistanceBetweenPointsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStorm">
+      <wsdl:input message="tns:GetStormSoapIn" />
+      <wsdl:output message="tns:GetStormSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGadget">
+      <wsdl:input message="tns:GetGadgetSoapIn" />
+      <wsdl:output message="tns:GetGadgetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Storms">
+      <wsdl:input message="tns:StormsSoapIn" />
+      <wsdl:output message="tns:StormsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCoordinates">
+      <wsdl:input message="tns:GetCoordinatesSoapIn" />
+      <wsdl:output message="tns:GetCoordinatesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ImageLinks">
+      <wsdl:input message="tns:ImageLinksSoapIn" />
+      <wsdl:output message="tns:ImageLinksSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStormNames">
+      <wsdl:input message="tns:GetStormNamesSoapIn" />
+      <wsdl:output message="tns:GetStormNamesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStormsDataset">
+      <wsdl:input message="tns:GetStormsDatasetSoapIn" />
+      <wsdl:output message="tns:GetStormsDatasetSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="TropicalStormInfoHttpGet">
+    <wsdl:operation name="HelloWorld">
+      <wsdl:input message="tns:HelloWorldHttpGetIn" />
+      <wsdl:output message="tns:HelloWorldHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGISData">
+      <wsdl:input message="tns:GetGISDataHttpGetIn" />
+      <wsdl:output message="tns:GetGISDataHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStormOverlays">
+      <wsdl:input message="tns:GetStormOverlaysHttpGetIn" />
+      <wsdl:output message="tns:GetStormOverlaysHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MobileSatelliteTabAndroid">
+      <wsdl:input message="tns:MobileSatelliteTabAndroidHttpGetIn" />
+      <wsdl:output message="tns:MobileSatelliteTabAndroidHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MobileTabs">
+      <wsdl:input message="tns:MobileTabsHttpGetIn" />
+      <wsdl:output message="tns:MobileTabsHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MobileSatelliteTab">
+      <wsdl:input message="tns:MobileSatelliteTabHttpGetIn" />
+      <wsdl:output message="tns:MobileSatelliteTabHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateAlerts">
+      <wsdl:input message="tns:CreateAlertsHttpGetIn" />
+      <wsdl:output message="tns:CreateAlertsHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateAlert">
+      <wsdl:input message="tns:CreateAlertHttpGetIn" />
+      <wsdl:output message="tns:CreateAlertHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveAlert">
+      <wsdl:input message="tns:RemoveAlertHttpGetIn" />
+      <wsdl:output message="tns:RemoveAlertHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PointsOfInterest">
+      <wsdl:input message="tns:PointsOfInterestHttpGetIn" />
+      <wsdl:output message="tns:PointsOfInterestHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRegCode">
+      <wsdl:input message="tns:GetRegCodeHttpGetIn" />
+      <wsdl:output message="tns:GetRegCodeHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RetrieveRegistration">
+      <wsdl:input message="tns:RetrieveRegistrationHttpGetIn" />
+      <wsdl:output message="tns:RetrieveRegistrationHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LoginUser">
+      <wsdl:input message="tns:LoginUserHttpGetIn" />
+      <wsdl:output message="tns:LoginUserHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AppLinksAndroid">
+      <wsdl:input message="tns:AppLinksAndroidHttpGetIn" />
+      <wsdl:output message="tns:AppLinksAndroidHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AppLinks">
+      <wsdl:input message="tns:AppLinksHttpGetIn" />
+      <wsdl:output message="tns:AppLinksHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="VersionCheck">
+      <wsdl:input message="tns:VersionCheckHttpGetIn" />
+      <wsdl:output message="tns:VersionCheckHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ValidateUser">
+      <wsdl:input message="tns:ValidateUserHttpGetIn" />
+      <wsdl:output message="tns:ValidateUserHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTimeStamp">
+      <wsdl:input message="tns:GetTimeStampHttpGetIn" />
+      <wsdl:output message="tns:GetTimeStampHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="StormNames">
+      <wsdl:input message="tns:StormNamesHttpGetIn" />
+      <wsdl:output message="tns:StormNamesHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDistanceBetweenPoints">
+      <wsdl:input message="tns:GetDistanceBetweenPointsHttpGetIn" />
+      <wsdl:output message="tns:GetDistanceBetweenPointsHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStorm">
+      <wsdl:input message="tns:GetStormHttpGetIn" />
+      <wsdl:output message="tns:GetStormHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGadget">
+      <wsdl:input message="tns:GetGadgetHttpGetIn" />
+      <wsdl:output message="tns:GetGadgetHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Storms">
+      <wsdl:input message="tns:StormsHttpGetIn" />
+      <wsdl:output message="tns:StormsHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCoordinates">
+      <wsdl:input message="tns:GetCoordinatesHttpGetIn" />
+      <wsdl:output message="tns:GetCoordinatesHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ImageLinks">
+      <wsdl:input message="tns:ImageLinksHttpGetIn" />
+      <wsdl:output message="tns:ImageLinksHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStormNames">
+      <wsdl:input message="tns:GetStormNamesHttpGetIn" />
+      <wsdl:output message="tns:GetStormNamesHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStormsDataset">
+      <wsdl:input message="tns:GetStormsDatasetHttpGetIn" />
+      <wsdl:output message="tns:GetStormsDatasetHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="TropicalStormInfoHttpPost">
+    <wsdl:operation name="HelloWorld">
+      <wsdl:input message="tns:HelloWorldHttpPostIn" />
+      <wsdl:output message="tns:HelloWorldHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGISData">
+      <wsdl:input message="tns:GetGISDataHttpPostIn" />
+      <wsdl:output message="tns:GetGISDataHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStormOverlays">
+      <wsdl:input message="tns:GetStormOverlaysHttpPostIn" />
+      <wsdl:output message="tns:GetStormOverlaysHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MobileSatelliteTabAndroid">
+      <wsdl:input message="tns:MobileSatelliteTabAndroidHttpPostIn" />
+      <wsdl:output message="tns:MobileSatelliteTabAndroidHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MobileTabs">
+      <wsdl:input message="tns:MobileTabsHttpPostIn" />
+      <wsdl:output message="tns:MobileTabsHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MobileSatelliteTab">
+      <wsdl:input message="tns:MobileSatelliteTabHttpPostIn" />
+      <wsdl:output message="tns:MobileSatelliteTabHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateAlerts">
+      <wsdl:input message="tns:CreateAlertsHttpPostIn" />
+      <wsdl:output message="tns:CreateAlertsHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateAlert">
+      <wsdl:input message="tns:CreateAlertHttpPostIn" />
+      <wsdl:output message="tns:CreateAlertHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveAlert">
+      <wsdl:input message="tns:RemoveAlertHttpPostIn" />
+      <wsdl:output message="tns:RemoveAlertHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PointsOfInterest">
+      <wsdl:input message="tns:PointsOfInterestHttpPostIn" />
+      <wsdl:output message="tns:PointsOfInterestHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRegCode">
+      <wsdl:input message="tns:GetRegCodeHttpPostIn" />
+      <wsdl:output message="tns:GetRegCodeHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RetrieveRegistration">
+      <wsdl:input message="tns:RetrieveRegistrationHttpPostIn" />
+      <wsdl:output message="tns:RetrieveRegistrationHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LoginUser">
+      <wsdl:input message="tns:LoginUserHttpPostIn" />
+      <wsdl:output message="tns:LoginUserHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AppLinksAndroid">
+      <wsdl:input message="tns:AppLinksAndroidHttpPostIn" />
+      <wsdl:output message="tns:AppLinksAndroidHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AppLinks">
+      <wsdl:input message="tns:AppLinksHttpPostIn" />
+      <wsdl:output message="tns:AppLinksHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="VersionCheck">
+      <wsdl:input message="tns:VersionCheckHttpPostIn" />
+      <wsdl:output message="tns:VersionCheckHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ValidateUser">
+      <wsdl:input message="tns:ValidateUserHttpPostIn" />
+      <wsdl:output message="tns:ValidateUserHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTimeStamp">
+      <wsdl:input message="tns:GetTimeStampHttpPostIn" />
+      <wsdl:output message="tns:GetTimeStampHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="StormNames">
+      <wsdl:input message="tns:StormNamesHttpPostIn" />
+      <wsdl:output message="tns:StormNamesHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDistanceBetweenPoints">
+      <wsdl:input message="tns:GetDistanceBetweenPointsHttpPostIn" />
+      <wsdl:output message="tns:GetDistanceBetweenPointsHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStorm">
+      <wsdl:input message="tns:GetStormHttpPostIn" />
+      <wsdl:output message="tns:GetStormHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGadget">
+      <wsdl:input message="tns:GetGadgetHttpPostIn" />
+      <wsdl:output message="tns:GetGadgetHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Storms">
+      <wsdl:input message="tns:StormsHttpPostIn" />
+      <wsdl:output message="tns:StormsHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCoordinates">
+      <wsdl:input message="tns:GetCoordinatesHttpPostIn" />
+      <wsdl:output message="tns:GetCoordinatesHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ImageLinks">
+      <wsdl:input message="tns:ImageLinksHttpPostIn" />
+      <wsdl:output message="tns:ImageLinksHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStormNames">
+      <wsdl:input message="tns:GetStormNamesHttpPostIn" />
+      <wsdl:output message="tns:GetStormNamesHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStormsDataset">
+      <wsdl:input message="tns:GetStormsDatasetHttpPostIn" />
+      <wsdl:output message="tns:GetStormsDatasetHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="TropicalStormInfoSoap" type="tns:TropicalStormInfoSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="HelloWorld">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/HelloWorld" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGISData">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/GetGISData" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStormOverlays">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/GetStormOverlays" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MobileSatelliteTabAndroid">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/MobileSatelliteTabAndroid" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MobileTabs">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/MobileTabs" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MobileSatelliteTab">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/MobileSatelliteTab" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateAlerts">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/CreateAlerts" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateAlert">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/CreateAlert" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveAlert">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/RemoveAlert" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PointsOfInterest">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/PointsOfInterest" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRegCode">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/GetRegCode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RetrieveRegistration">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/RetrieveRegistration" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoginUser">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/LoginUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AppLinksAndroid">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/AppLinksAndroid" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AppLinks">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/AppLinks" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VersionCheck">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/VersionCheck" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ValidateUser">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/ValidateUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTimeStamp">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/GetTimeStamp" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StormNames">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/StormNames" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDistanceBetweenPoints">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/GetDistanceBetweenPoints" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStorm">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/GetStorm" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGadget">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/GetGadget" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Storms">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/Storms" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCoordinates">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/GetCoordinates" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ImageLinks">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/ImageLinks" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStormNames">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/GetStormNames" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStormsDataset">
+      <soap:operation soapAction="http://www.hurricanesoftware.com/services/GetStormsDataset" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="TropicalStormInfoSoap12" type="tns:TropicalStormInfoSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="HelloWorld">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/HelloWorld" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGISData">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/GetGISData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStormOverlays">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/GetStormOverlays" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MobileSatelliteTabAndroid">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/MobileSatelliteTabAndroid" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MobileTabs">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/MobileTabs" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MobileSatelliteTab">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/MobileSatelliteTab" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateAlerts">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/CreateAlerts" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateAlert">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/CreateAlert" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveAlert">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/RemoveAlert" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PointsOfInterest">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/PointsOfInterest" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRegCode">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/GetRegCode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RetrieveRegistration">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/RetrieveRegistration" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoginUser">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/LoginUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AppLinksAndroid">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/AppLinksAndroid" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AppLinks">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/AppLinks" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VersionCheck">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/VersionCheck" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ValidateUser">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/ValidateUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTimeStamp">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/GetTimeStamp" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StormNames">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/StormNames" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDistanceBetweenPoints">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/GetDistanceBetweenPoints" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStorm">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/GetStorm" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGadget">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/GetGadget" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Storms">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/Storms" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCoordinates">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/GetCoordinates" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ImageLinks">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/ImageLinks" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStormNames">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/GetStormNames" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStormsDataset">
+      <soap12:operation soapAction="http://www.hurricanesoftware.com/services/GetStormsDataset" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="TropicalStormInfoHttpGet" type="tns:TropicalStormInfoHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="HelloWorld">
+      <http:operation location="/HelloWorld" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGISData">
+      <http:operation location="/GetGISData" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStormOverlays">
+      <http:operation location="/GetStormOverlays" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MobileSatelliteTabAndroid">
+      <http:operation location="/MobileSatelliteTabAndroid" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MobileTabs">
+      <http:operation location="/MobileTabs" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MobileSatelliteTab">
+      <http:operation location="/MobileSatelliteTab" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateAlerts">
+      <http:operation location="/CreateAlerts" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateAlert">
+      <http:operation location="/CreateAlert" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveAlert">
+      <http:operation location="/RemoveAlert" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PointsOfInterest">
+      <http:operation location="/PointsOfInterest" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRegCode">
+      <http:operation location="/GetRegCode" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RetrieveRegistration">
+      <http:operation location="/RetrieveRegistration" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoginUser">
+      <http:operation location="/LoginUser" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AppLinksAndroid">
+      <http:operation location="/AppLinksAndroid" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AppLinks">
+      <http:operation location="/AppLinks" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VersionCheck">
+      <http:operation location="/VersionCheck" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ValidateUser">
+      <http:operation location="/ValidateUser" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTimeStamp">
+      <http:operation location="/GetTimeStamp" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StormNames">
+      <http:operation location="/StormNames" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDistanceBetweenPoints">
+      <http:operation location="/GetDistanceBetweenPoints" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStorm">
+      <http:operation location="/GetStorm" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGadget">
+      <http:operation location="/GetGadget" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Storms">
+      <http:operation location="/Storms" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCoordinates">
+      <http:operation location="/GetCoordinates" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ImageLinks">
+      <http:operation location="/ImageLinks" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStormNames">
+      <http:operation location="/GetStormNames" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStormsDataset">
+      <http:operation location="/GetStormsDataset" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="TropicalStormInfoHttpPost" type="tns:TropicalStormInfoHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="HelloWorld">
+      <http:operation location="/HelloWorld" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGISData">
+      <http:operation location="/GetGISData" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStormOverlays">
+      <http:operation location="/GetStormOverlays" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MobileSatelliteTabAndroid">
+      <http:operation location="/MobileSatelliteTabAndroid" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MobileTabs">
+      <http:operation location="/MobileTabs" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MobileSatelliteTab">
+      <http:operation location="/MobileSatelliteTab" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateAlerts">
+      <http:operation location="/CreateAlerts" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateAlert">
+      <http:operation location="/CreateAlert" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveAlert">
+      <http:operation location="/RemoveAlert" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PointsOfInterest">
+      <http:operation location="/PointsOfInterest" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRegCode">
+      <http:operation location="/GetRegCode" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RetrieveRegistration">
+      <http:operation location="/RetrieveRegistration" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LoginUser">
+      <http:operation location="/LoginUser" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AppLinksAndroid">
+      <http:operation location="/AppLinksAndroid" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AppLinks">
+      <http:operation location="/AppLinks" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VersionCheck">
+      <http:operation location="/VersionCheck" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ValidateUser">
+      <http:operation location="/ValidateUser" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTimeStamp">
+      <http:operation location="/GetTimeStamp" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StormNames">
+      <http:operation location="/StormNames" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDistanceBetweenPoints">
+      <http:operation location="/GetDistanceBetweenPoints" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStorm">
+      <http:operation location="/GetStorm" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGadget">
+      <http:operation location="/GetGadget" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Storms">
+      <http:operation location="/Storms" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCoordinates">
+      <http:operation location="/GetCoordinates" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ImageLinks">
+      <http:operation location="/ImageLinks" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStormNames">
+      <http:operation location="/GetStormNames" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStormsDataset">
+      <http:operation location="/GetStormsDataset" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="TropicalStormInfo">
+    <wsdl:port name="TropicalStormInfoSoap" binding="tns:TropicalStormInfoSoap">
+      <soap:address location="https://webservice.hurricanesoftware.com/Services/TropicalStorms.asmx" />
+    </wsdl:port>
+    <wsdl:port name="TropicalStormInfoSoap12" binding="tns:TropicalStormInfoSoap12">
+      <soap12:address location="https://webservice.hurricanesoftware.com/Services/TropicalStorms.asmx" />
+    </wsdl:port>
+    <wsdl:port name="TropicalStormInfoHttpGet" binding="tns:TropicalStormInfoHttpGet">
+      <http:address location="https://webservice.hurricanesoftware.com/Services/TropicalStorms.asmx" />
+    </wsdl:port>
+    <wsdl:port name="TropicalStormInfoHttpPost" binding="tns:TropicalStormInfoHttpPost">
+      <http:address location="https://webservice.hurricanesoftware.com/Services/TropicalStorms.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

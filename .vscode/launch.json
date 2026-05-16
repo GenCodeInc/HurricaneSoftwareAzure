@@ -1,0 +1,28 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch TropicalStorms.Api",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build solution",
+      "program": "${workspaceFolder}/src/TropicalStorms.Api/bin/Debug/net8.0/TropicalStorms.Api.dll",
+      "args": [
+        "--urls",
+        "http://127.0.0.1:5085"
+      ],
+      "cwd": "${workspaceFolder}/src/TropicalStorms.Api",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "stopAtEntry": false,
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Attach to NHCParser.Function",
+      "type": "coreclr",
+      "request": "attach",
+      "processId": "${command:pickProcess}"
+    }
+  ]
+}

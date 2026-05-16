@@ -1,0 +1,462 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.43.8.12551",
+      "templateHash": "7142594774837319458"
+    }
+  },
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "centralus"
+    },
+    "functionAppName": {
+      "type": "string",
+      "defaultValue": "[format('func-nhcparser-flex-{0}', uniqueString(resourceGroup().id))]"
+    },
+    "appServicePlanName": {
+      "type": "string",
+      "defaultValue": "[format('asp-nhcparser-flex-{0}', uniqueString(resourceGroup().id))]"
+    },
+    "storageAccountName": {
+      "type": "string",
+      "defaultValue": "[format('stnhcparser{0}', uniqueString(resourceGroup().id))]"
+    },
+    "sqlConnectionString": {
+      "type": "securestring"
+    },
+    "timerSchedule": {
+      "type": "string",
+      "defaultValue": "0 */5 * * * *"
+    },
+    "currentYearOnly": {
+      "type": "bool",
+      "defaultValue": true
+    },
+    "probeDatabaseOnStartup": {
+      "type": "bool",
+      "defaultValue": false
+    },
+    "maximumInstanceCount": {
+      "type": "int",
+      "defaultValue": 100
+    },
+    "instanceMemoryMB": {
+      "type": "int",
+      "defaultValue": 512
+    },
+    "alwaysReadyFunctionName": {
+      "type": "string",
+      "defaultValue": "NHCParserTimer"
+    },
+    "alwaysReadyInstanceCount": {
+      "type": "int",
+      "defaultValue": 1
+    },
+    "enableVnetIntegration": {
+      "type": "bool",
+      "defaultValue": true
+    },
+    "vnetName": {
+      "type": "string",
+      "defaultValue": "[format('vnet-nhcparser-{0}', take(uniqueString(resourceGroup().id, parameters('functionAppName')), 12))]"
+    },
+    "vnetAddressPrefix": {
+      "type": "string",
+      "defaultValue": "10.20.0.0/24"
+    },
+    "integrationSubnetName": {
+      "type": "string",
+      "defaultValue": "snet-nhcparser-functions"
+    },
+    "integrationSubnetAddressPrefix": {
+      "type": "string",
+      "defaultValue": "10.20.0.0/27"
+    },
+    "privateEndpointSubnetName": {
+      "type": "string",
+      "defaultValue": "snet-nhcparser-private-endpoints"
+    },
+    "privateEndpointSubnetAddressPrefix": {
+      "type": "string",
+      "defaultValue": "10.20.0.32/27"
+    },
+    "sqlServerName": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "sqlVirtualNetworkRuleName": {
+      "type": "string",
+      "defaultValue": "nhcparser-function-subnet"
+    },
+    "privateDnsZoneName": {
+      "type": "string",
+      "defaultValue": "[format('privatelink{0}', environment().suffixes.sqlServerHostname)]"
+    },
+    "privateDnsZoneLinkName": {
+      "type": "string",
+      "defaultValue": "link-nhcparser-sql"
+    },
+    "sqlPrivateEndpointName": {
+      "type": "string",
+      "defaultValue": "[format('pe-sql-{0}', take(uniqueString(resourceGroup().id, parameters('sqlServerName')), 8))]"
+    },
+    "sqlPrivateDnsZoneGroupName": {
+      "type": "string",
+      "defaultValue": "sql-dns-zone-group"
+    },
+    "vnetRouteAllEnabled": {
+      "type": "bool",
+      "defaultValue": true
+    }
+  },
+  "variables": {
+    "deploymentContainerName": "app-package",
+    "logAnalyticsWorkspaceName": "[format('log-{0}', take(uniqueString(resourceGroup().id, parameters('functionAppName')), 20))]",
+    "applicationInsightsName": "[parameters('functionAppName')]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+      "apiVersion": "2023-05-01",
+      "name": "[format('{0}/{1}/{2}', parameters('storageAccountName'), 'default', variables('deploymentContainerName'))]",
+      "properties": {
+        "publicAccess": "None"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccountName'), 'default')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices",
+      "apiVersion": "2023-05-01",
+      "name": "[format('{0}/{1}', parameters('storageAccountName'), 'default')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2023-05-01",
+      "name": "[parameters('storageAccountName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "kind": "StorageV2",
+      "properties": {
+        "allowBlobPublicAccess": false,
+        "minimumTlsVersion": "TLS1_2",
+        "supportsHttpsTrafficOnly": true
+      }
+    },
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2024-04-01",
+      "name": "[parameters('appServicePlanName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "FC1",
+        "tier": "FlexConsumption"
+      },
+      "kind": "functionapp",
+      "properties": {
+        "reserved": true
+      }
+    },
+    {
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "apiVersion": "2023-09-01",
+      "name": "[variables('logAnalyticsWorkspaceName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "retentionInDays": 30,
+        "features": {
+          "searchVersion": 1
+        },
+        "sku": {
+          "name": "PerGB2018"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Insights/components",
+      "apiVersion": "2020-02-02",
+      "name": "[variables('applicationInsightsName')]",
+      "location": "[parameters('location')]",
+      "kind": "web",
+      "properties": {
+        "Application_Type": "web",
+        "WorkspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logAnalyticsWorkspaceName'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logAnalyticsWorkspaceName'))]"
+      ]
+    },
+    {
+      "condition": "[parameters('enableVnetIntegration')]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2023-11-01",
+      "name": "[parameters('vnetName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('vnetAddressPrefix')]"
+          ]
+        }
+      }
+    },
+    {
+      "condition": "[parameters('enableVnetIntegration')]",
+      "type": "Microsoft.Network/virtualNetworks/subnets",
+      "apiVersion": "2023-11-01",
+      "name": "[format('{0}/{1}', parameters('vnetName'), parameters('integrationSubnetName'))]",
+      "properties": {
+        "addressPrefix": "[parameters('integrationSubnetAddressPrefix')]",
+        "delegations": [
+          {
+            "name": "function-app-delegation",
+            "properties": {
+              "serviceName": "Microsoft.Web/serverFarms"
+            }
+          }
+        ],
+        "serviceEndpoints": [
+          {
+            "service": "Microsoft.Sql"
+          }
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+      ]
+    },
+    {
+      "condition": "[and(parameters('enableVnetIntegration'), not(empty(parameters('sqlServerName'))))]",
+      "type": "Microsoft.Network/virtualNetworks/subnets",
+      "apiVersion": "2023-11-01",
+      "name": "[format('{0}/{1}', parameters('vnetName'), parameters('privateEndpointSubnetName'))]",
+      "properties": {
+        "addressPrefix": "[parameters('privateEndpointSubnetAddressPrefix')]",
+        "privateEndpointNetworkPolicies": "Disabled"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+      ]
+    },
+    {
+      "condition": "[and(parameters('enableVnetIntegration'), not(empty(parameters('sqlServerName'))))]",
+      "type": "Microsoft.Sql/servers/virtualNetworkRules",
+      "apiVersion": "2025-02-01-preview",
+      "name": "[format('{0}/{1}', parameters('sqlServerName'), parameters('sqlVirtualNetworkRuleName'))]",
+      "properties": {
+        "ignoreMissingVnetServiceEndpoint": false,
+        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('integrationSubnetName'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('integrationSubnetName'))]"
+      ]
+    },
+    {
+      "condition": "[and(parameters('enableVnetIntegration'), not(empty(parameters('sqlServerName'))))]",
+      "type": "Microsoft.Network/privateDnsZones",
+      "apiVersion": "2020-06-01",
+      "name": "[parameters('privateDnsZoneName')]",
+      "location": "global"
+    },
+    {
+      "condition": "[and(parameters('enableVnetIntegration'), not(empty(parameters('sqlServerName'))))]",
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+      "apiVersion": "2020-06-01",
+      "name": "[format('{0}/{1}', parameters('privateDnsZoneName'), parameters('privateDnsZoneLinkName'))]",
+      "location": "global",
+      "properties": {
+        "registrationEnabled": false,
+        "virtualNetwork": {
+          "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZoneName'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+      ]
+    },
+    {
+      "condition": "[and(parameters('enableVnetIntegration'), not(empty(parameters('sqlServerName'))))]",
+      "type": "Microsoft.Network/privateEndpoints",
+      "apiVersion": "2023-11-01",
+      "name": "[parameters('sqlPrivateEndpointName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "subnet": {
+          "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('privateEndpointSubnetName'))]"
+        },
+        "privateLinkServiceConnections": [
+          {
+            "name": "sql-private-link",
+            "properties": {
+              "privateLinkServiceId": "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]",
+              "groupIds": [
+                "sqlServer"
+              ]
+            }
+          }
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('privateEndpointSubnetName'))]"
+      ]
+    },
+    {
+      "condition": "[and(parameters('enableVnetIntegration'), not(empty(parameters('sqlServerName'))))]",
+      "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+      "apiVersion": "2023-11-01",
+      "name": "[format('{0}/{1}', parameters('sqlPrivateEndpointName'), parameters('sqlPrivateDnsZoneGroupName'))]",
+      "properties": {
+        "privateDnsZoneConfigs": [
+          {
+            "name": "sql-zone-config",
+            "properties": {
+              "privateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZoneName'))]"
+            }
+          }
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZoneName'))]",
+        "[resourceId('Microsoft.Network/privateEndpoints', parameters('sqlPrivateEndpointName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2024-04-01",
+      "name": "[parameters('functionAppName')]",
+      "location": "[parameters('location')]",
+      "kind": "functionapp,linux",
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+        "httpsOnly": true,
+        "virtualNetworkSubnetId": "[if(parameters('enableVnetIntegration'), resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('integrationSubnetName')), null())]",
+        "siteConfig": {
+          "minTlsVersion": "1.2",
+          "ftpsState": "Disabled"
+        },
+        "functionAppConfig": {
+          "deployment": {
+            "storage": {
+              "type": "blobContainer",
+              "value": "[format('{0}{1}', reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2023-05-01').primaryEndpoints.blob, variables('deploymentContainerName'))]",
+              "authentication": {
+                "type": "StorageAccountConnectionString",
+                "storageAccountConnectionStringName": "DEPLOYMENT_STORAGE_CONNECTION_STRING"
+              }
+            }
+          },
+          "runtime": {
+            "name": "dotnet-isolated",
+            "version": "8.0"
+          },
+          "scaleAndConcurrency": {
+            "maximumInstanceCount": "[parameters('maximumInstanceCount')]",
+            "instanceMemoryMB": "[parameters('instanceMemoryMB')]",
+            "alwaysReady": [
+              {
+                "name": "[format('function:{0}', parameters('alwaysReadyFunctionName'))]",
+                "instanceCount": "[parameters('alwaysReadyInstanceCount')]"
+              }
+            ]
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('integrationSubnetName'))]",
+        "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+      ]
+    },
+    {
+      "condition": "[parameters('enableVnetIntegration')]",
+      "type": "Microsoft.Web/sites/config",
+      "apiVersion": "2024-04-01",
+      "name": "[format('{0}/{1}', parameters('functionAppName'), 'web')]",
+      "properties": {
+        "vnetRouteAllEnabled": "[parameters('vnetRouteAllEnabled')]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Web/sites/config",
+      "apiVersion": "2024-04-01",
+      "name": "[format('{0}/{1}', parameters('functionAppName'), 'appsettings')]",
+      "properties": {
+        "AzureWebJobsStorage": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1};EndpointSuffix={2}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2023-05-01').keys[0].value, environment().suffixes.storage)]",
+        "DEPLOYMENT_STORAGE_CONNECTION_STRING": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1};EndpointSuffix={2}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2023-05-01').keys[0].value, environment().suffixes.storage)]",
+        "APPLICATIONINSIGHTS_CONNECTION_STRING": "[reference(resourceId('Microsoft.Insights/components', variables('applicationInsightsName')), '2020-02-02').ConnectionString]",
+        "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('Microsoft.Insights/components', variables('applicationInsightsName')), '2020-02-02').InstrumentationKey]",
+        "FUNCTIONS_EXTENSION_VERSION": "~4",
+        "NHC_TIMER_SCHEDULE": "[parameters('timerSchedule')]",
+        "NHCParser__SqlConnectionString": "[parameters('sqlConnectionString')]",
+        "NHCParser__CurrentYearOnly": "[string(parameters('currentYearOnly'))]",
+        "NHCParser__ProbeDatabaseOnStartup": "[string(parameters('probeDatabaseOnStartup'))]",
+        "WEBSITE_USE_PLACEHOLDER_DOTNETISOLATED": "1"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Insights/components', variables('applicationInsightsName'))]",
+        "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+      ]
+    }
+  ],
+  "outputs": {
+    "functionAppName": {
+      "type": "string",
+      "value": "[parameters('functionAppName')]"
+    },
+    "functionAppHostname": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Web/sites', parameters('functionAppName')), '2024-04-01').defaultHostName]"
+    },
+    "storageAccountName": {
+      "type": "string",
+      "value": "[parameters('storageAccountName')]"
+    },
+    "appServicePlanName": {
+      "type": "string",
+      "value": "[parameters('appServicePlanName')]"
+    },
+    "applicationInsightsName": {
+      "type": "string",
+      "value": "[variables('applicationInsightsName')]"
+    },
+    "logAnalyticsWorkspaceName": {
+      "type": "string",
+      "value": "[variables('logAnalyticsWorkspaceName')]"
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "value": "[if(parameters('enableVnetIntegration'), parameters('vnetName'), '')]"
+    },
+    "integrationSubnetResourceId": {
+      "type": "string",
+      "value": "[if(parameters('enableVnetIntegration'), resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('integrationSubnetName')), '')]"
+    },
+    "privateEndpointSubnetResourceId": {
+      "type": "string",
+      "value": "[if(and(parameters('enableVnetIntegration'), not(empty(parameters('sqlServerName')))), resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('privateEndpointSubnetName')), '')]"
+    },
+    "privateDnsZoneResourceId": {
+      "type": "string",
+      "value": "[if(and(parameters('enableVnetIntegration'), not(empty(parameters('sqlServerName')))), resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZoneName')), '')]"
+    },
+    "sqlPrivateEndpointResourceId": {
+      "type": "string",
+      "value": "[if(and(parameters('enableVnetIntegration'), not(empty(parameters('sqlServerName')))), resourceId('Microsoft.Network/privateEndpoints', parameters('sqlPrivateEndpointName')), '')]"
+    }
+  }
+}

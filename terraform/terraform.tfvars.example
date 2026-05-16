@@ -1,0 +1,60 @@
+subscription_id         = "<sub id>"
+resource_group_name     = "<resource group>"
+location                = "centralus"
+create_resource_group   = false
+
+# Leave null to auto-generate a unique server name.
+sql_server_name         = null
+sql_server_name_prefix  = "sql-example"
+
+administrator_login     = "sqladminuser"
+administrator_password  = "<pwd>"
+
+allow_azure_services    = false
+client_ip_address       = "<your public ip>"
+
+database_names          = ["TTE"]
+sku_name                = "Basic"
+max_size_gb             = 2
+storage_account_type    = "Local"
+
+# Set true only on a machine that has SqlPackage installed and access to the DACPAC files.
+publish_dacpacs         = false
+dacpac_directory        = "../DAC Packages"
+sqlpackage_path         = null
+exclude_object_types    = ["Users", "Logins", "StoredProcedures"]
+
+deploy_function_app                 = true
+function_app_name                   = null
+function_app_name_prefix            = "func-nhcparser-flex"
+function_app_plan_name              = null
+function_app_plan_name_prefix       = "asp-nhcparser-flex"
+function_storage_account_name       = null
+function_storage_account_name_prefix = "stnhcparser"
+function_storage_account_tier       = "Standard"
+function_storage_account_replication_type = "LRS"
+function_sql_database_name          = "TTE"
+function_sql_connection_string      = null
+function_timer_schedule             = "0 */5 * * * *"
+function_maximum_instance_count     = 100
+function_instance_memory_in_mb      = 512
+function_always_ready_function_name = "NHCParserTimer"
+function_always_ready_instance_count = 1
+function_current_year_only          = true
+function_probe_database_on_startup  = false
+
+# Parser private-network defaults. These match the current live shape.
+enable_function_vnet_integration            = true
+function_vnet_name                          = "vnet-nhcparser-cu66c7"
+function_vnet_address_space                 = "10.20.0.0/24"
+function_integration_subnet_name            = "snet-nhcparser-functions"
+function_integration_subnet_address_prefix  = "10.20.0.0/27"
+function_sql_virtual_network_rule_name      = "NHCParserFunctionSubnet"
+function_vnet_route_all_enabled             = true
+enable_function_sql_private_endpoint        = true
+function_private_endpoint_subnet_name       = "snet-nhcparser-private-endpoints"
+function_private_endpoint_subnet_address_prefix = "10.20.0.32/27"
+function_private_dns_zone_name              = "privatelink.database.windows.net"
+function_private_dns_zone_vnet_link_name    = "link-nhcparser-sql"
+function_sql_private_endpoint_name          = "pe-sql-gencode-cu66c7"
+function_sql_private_dns_zone_group_name    = "sql-dns-zone-group"

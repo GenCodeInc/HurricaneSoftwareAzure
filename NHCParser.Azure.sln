@@ -1,0 +1,45 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHCParser.Core", "src\NHCParser.Core\NHCParser.Core.csproj", "{5E17CBE8-C911-4B8A-AF38-6903A172C101}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TTEBusiness.Core", "src\TTEBusiness.Core\TTEBusiness.Core.csproj", "{D1A3C3E0-5C7B-4E9D-B5A7-1F3E61E3B001}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHCParser.Function", "src\NHCParser.Function\NHCParser.Function.csproj", "{A8D4D22F-9D71-4F4B-8F09-3C4BF8E5A002}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TropicalStorms.Api", "src\TropicalStorms.Api\TropicalStorms.Api.csproj", "{2B7E8C4C-4F2A-41A9-BADF-8D47E1DAA901}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHCParser.Core.Tests", "tests\NHCParser.Core.Tests\NHCParser.Core.Tests.csproj", "{8E7B7A86-9124-49AA-91C8-613D79FBC202}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5E17CBE8-C911-4B8A-AF38-6903A172C101}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E17CBE8-C911-4B8A-AF38-6903A172C101}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E17CBE8-C911-4B8A-AF38-6903A172C101}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E17CBE8-C911-4B8A-AF38-6903A172C101}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1A3C3E0-5C7B-4E9D-B5A7-1F3E61E3B001}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1A3C3E0-5C7B-4E9D-B5A7-1F3E61E3B001}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1A3C3E0-5C7B-4E9D-B5A7-1F3E61E3B001}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1A3C3E0-5C7B-4E9D-B5A7-1F3E61E3B001}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8D4D22F-9D71-4F4B-8F09-3C4BF8E5A002}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8D4D22F-9D71-4F4B-8F09-3C4BF8E5A002}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8D4D22F-9D71-4F4B-8F09-3C4BF8E5A002}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8D4D22F-9D71-4F4B-8F09-3C4BF8E5A002}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B7E8C4C-4F2A-41A9-BADF-8D47E1DAA901}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B7E8C4C-4F2A-41A9-BADF-8D47E1DAA901}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B7E8C4C-4F2A-41A9-BADF-8D47E1DAA901}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B7E8C4C-4F2A-41A9-BADF-8D47E1DAA901}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E7B7A86-9124-49AA-91C8-613D79FBC202}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E7B7A86-9124-49AA-91C8-613D79FBC202}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E7B7A86-9124-49AA-91C8-613D79FBC202}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E7B7A86-9124-49AA-91C8-613D79FBC202}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

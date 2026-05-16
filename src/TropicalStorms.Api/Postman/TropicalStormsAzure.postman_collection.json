@@ -1,0 +1,303 @@
+{
+  "info": {
+    "name": "TropicalStormsAzure",
+    "_postman_id": "e16355e5-81af-4fe7-bad2-b1f733fbf7ef",
+    "description": "Production TropicalStorms checks against the live custom domain for both JSON API and SOAP endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "JSON API",
+      "item": [
+        {
+          "name": "HelloWorld",
+          "request": {
+            "method": "GET",
+            "url": "https://webservice.hurricanesoftware.com/api/tropical-storms/HelloWorld"
+          }
+        },
+        {
+          "name": "GetTimeStamp",
+          "request": {
+            "method": "GET",
+            "url": "https://webservice.hurricanesoftware.com/api/tropical-storms/GetTimeStamp?region=All"
+          }
+        },
+        {
+          "name": "GetStormOverlays",
+          "request": {
+            "method": "GET",
+            "url": "https://webservice.hurricanesoftware.com/api/tropical-storms/GetStormOverlays"
+          }
+        },
+        {
+          "name": "GetGISData",
+          "request": {
+            "method": "GET",
+            "url": "https://webservice.hurricanesoftware.com/api/tropical-storms/GetGISData"
+          }
+        },
+        {
+          "name": "StormNames",
+          "request": {
+            "method": "GET",
+            "url": "https://webservice.hurricanesoftware.com/api/tropical-storms/StormNames?username=demo&password=demo&region=All&activeOnly=true"
+          }
+        },
+        {
+          "name": "GetStorm",
+          "request": {
+            "method": "GET",
+            "url": "https://webservice.hurricanesoftware.com/api/tropical-storms/GetStorm?username=demo&password=demo&stormID=8136&withImageLinks=true"
+          }
+        },
+        {
+          "name": "GetCoordinates",
+          "request": {
+            "method": "GET",
+            "url": "https://webservice.hurricanesoftware.com/api/tropical-storms/GetCoordinates?username=demo&password=demo&stormID=8136"
+          }
+        },
+        {
+          "name": "Storms",
+          "request": {
+            "method": "GET",
+            "url": "https://webservice.hurricanesoftware.com/api/tropical-storms/Storms?username=demo&password=demo&stormsToDownload=8136&region=All&withImageLinks=false&activeOnly=true&lastCoordinateOnly=false&omitForecastsToo=false"
+          }
+        },
+        {
+          "name": "GetStormNames",
+          "request": {
+            "method": "GET",
+            "url": "https://webservice.hurricanesoftware.com/api/tropical-storms/GetStormNames?username=demo&password=demo&region=All"
+          }
+        },
+        {
+          "name": "GetStormsDataset",
+          "request": {
+            "method": "GET",
+            "url": "https://webservice.hurricanesoftware.com/api/tropical-storms/GetStormsDataset?username=demo&password=demo&stormsToDownload=8136&region=All"
+          }
+        }
+      ]
+    },
+    {
+      "name": "SOAP",
+      "item": [
+        {
+          "name": "WSDL Contract Check",
+          "request": {
+            "method": "GET",
+            "url": "https://webservice.hurricanesoftware.com/Services/TropicalStorms.asmx?wsdl"
+          }
+        },
+        {
+          "name": "HelloWorld SOAP 1.1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.hurricanesoftware.com/services/HelloWorld\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <HelloWorld xmlns=\"http://www.hurricanesoftware.com/services\" />\n  </soap:Body>\n</soap:Envelope>"
+            },
+            "url": "https://webservice.hurricanesoftware.com/Services/TropicalStorms.asmx"
+          }
+        },
+        {
+          "name": "HelloWorld SOAP 1.2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/soap+xml; charset=utf-8; action=\"http://www.hurricanesoftware.com/services/HelloWorld\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n  <soap12:Body>\n    <HelloWorld xmlns=\"http://www.hurricanesoftware.com/services\" />\n  </soap12:Body>\n</soap12:Envelope>"
+            },
+            "url": "https://webservice.hurricanesoftware.com/Services/TropicalStorms.asmx"
+          }
+        },
+        {
+          "name": "GetGISData SOAP 1.1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.hurricanesoftware.com/services/GetGISData\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <GetGISData xmlns=\"http://www.hurricanesoftware.com/services\" />\n  </soap:Body>\n</soap:Envelope>"
+            },
+            "url": "https://webservice.hurricanesoftware.com/Services/TropicalStorms.asmx"
+          }
+        },
+        {
+          "name": "StormNames SOAP 1.1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.hurricanesoftware.com/services/StormNames\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <StormNames xmlns=\"http://www.hurricanesoftware.com/services\">\n      <username>demo</username>\n      <password>demo</password>\n      <region>All</region>\n      <activeOnly>true</activeOnly>\n    </StormNames>\n  </soap:Body>\n</soap:Envelope>"
+            },
+            "url": "https://webservice.hurricanesoftware.com/Services/TropicalStorms.asmx"
+          }
+        },
+        {
+          "name": "GetStorm SOAP 1.1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.hurricanesoftware.com/services/GetStorm\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <GetStorm xmlns=\"http://www.hurricanesoftware.com/services\">\n      <username>demo</username>\n      <password>demo</password>\n      <stormID>8136</stormID>\n      <withImageLinks>true</withImageLinks>\n    </GetStorm>\n  </soap:Body>\n</soap:Envelope>"
+            },
+            "url": "https://webservice.hurricanesoftware.com/Services/TropicalStorms.asmx"
+          }
+        },
+        {
+          "name": "GetCoordinates SOAP 1.1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.hurricanesoftware.com/services/GetCoordinates\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <GetCoordinates xmlns=\"http://www.hurricanesoftware.com/services\">\n      <username>demo</username>\n      <password>demo</password>\n      <stormID>8136</stormID>\n    </GetCoordinates>\n  </soap:Body>\n</soap:Envelope>"
+            },
+            "url": "https://webservice.hurricanesoftware.com/Services/TropicalStorms.asmx"
+          }
+        },
+        {
+          "name": "ImageLinks SOAP 1.1 GoesVisFull",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.hurricanesoftware.com/services/ImageLinks\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <ImageLinks xmlns=\"http://www.hurricanesoftware.com/services\">\n      <username>demo</username>\n      <password>demo</password>\n      <stormID>8136</stormID>\n      <imageLinkType>GoesVisFull</imageLinkType>\n    </ImageLinks>\n  </soap:Body>\n</soap:Envelope>"
+            },
+            "url": "https://webservice.hurricanesoftware.com/Services/TropicalStorms.asmx"
+          }
+        },
+        {
+          "name": "Storms SOAP 1.1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.hurricanesoftware.com/services/Storms\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <Storms xmlns=\"http://www.hurricanesoftware.com/services\">\n      <username>demo</username>\n      <password>demo</password>\n      <stormsToDownload>8136</stormsToDownload>\n      <region>All</region>\n      <withImageLinks>false</withImageLinks>\n      <activeOnly>true</activeOnly>\n      <lastCoordinateOnly>false</lastCoordinateOnly>\n      <omitForecastsToo>false</omitForecastsToo>\n    </Storms>\n  </soap:Body>\n</soap:Envelope>"
+            },
+            "url": "https://webservice.hurricanesoftware.com/Services/TropicalStorms.asmx"
+          }
+        },
+        {
+          "name": "GetStormNames SOAP 1.1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.hurricanesoftware.com/services/GetStormNames\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <GetStormNames xmlns=\"http://www.hurricanesoftware.com/services\">\n      <username>demo</username>\n      <password>demo</password>\n      <region>All</region>\n    </GetStormNames>\n  </soap:Body>\n</soap:Envelope>"
+            },
+            "url": "https://webservice.hurricanesoftware.com/Services/TropicalStorms.asmx"
+          }
+        },
+        {
+          "name": "GetStormsDataset SOAP 1.1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/xml; charset=utf-8"
+              },
+              {
+                "key": "SOAPAction",
+                "value": "\"http://www.hurricanesoftware.com/services/GetStormsDataset\""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <soap:Body>\n    <GetStormsDataset xmlns=\"http://www.hurricanesoftware.com/services\">\n      <username>demo</username>\n      <password>demo</password>\n      <stormsToDownload>8136</stormsToDownload>\n      <region>All</region>\n    </GetStormsDataset>\n  </soap:Body>\n</soap:Envelope>"
+            },
+            "url": "https://webservice.hurricanesoftware.com/Services/TropicalStorms.asmx"
+          }
+        }
+      ]
+    }
+  ]
+}

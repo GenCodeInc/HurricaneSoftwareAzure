@@ -1,0 +1,39 @@
+src/NHCParser.Function/local.settings.json
+src/TropicalStorms.Api/appsettings.Development.json
+
+# Local secrets and credentials
+.env
+.env.*
+!.env.example
+**/*.tfvars
+!terraform/terraform.tfvars.example
+.terraform/
+**/.terraform/
+**/appsettings.Development.json
+**/local.settings.json
+*.pfx
+*.p12
+*.pem
+*.key
+*.lscache
+
+# .NET build output
+**/bin/
+**/obj/
+
+# Test output
+TestResults/
+**/TestResults/
+
+# Local IDE and temporary workspace files
+.vs/
+.vscode/*.user
+.publish/
+.scratch/
+.tmp/
+.azurite/
+DBBackups/
+DAC Packages/
+temp*
+deploy_output.txt
+test_results.txt
