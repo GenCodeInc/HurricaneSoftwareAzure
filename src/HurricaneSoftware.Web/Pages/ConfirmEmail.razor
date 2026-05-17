@@ -1,0 +1,49 @@
+@page "/confirm-email"
+@page "/ConfirmEmail.aspx"
+@inject WebsiteApiClient Api
+
+<PageTitle>Confirm Alerts</PageTitle>
+
+<section class="page-section narrow">
+    <p class="eyebrow">Confirm Alerts</p>
+    <h1>Finalize your alert subscription.</h1>
+    @if (isBusy)
+    {
+        <p class="status">Confirming your alert subscription...</p>
+    }
+    else if (!string.IsNullOrWhiteSpace(statusMessage))
+    {
+        <p class="status @(succeeded ? "success" : "error")">@statusMessage</p>
+    }
+</section>
+
+@code {
+    [SupplyParameterFromQuery(Name = "ConfirmID")]
+    public int? ConfirmId { get; set; }
+
+    private int? processedConfirmId;
+    private bool isBusy;
+    private bool succeeded;
+    private string? statusMessage;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!ConfirmId.HasValue || processedConfirmId == ConfirmId)
+        {
+            if (!ConfirmId.HasValue)
+            {
+                succeeded = false;
+                statusMessage = "The confirmation link is missing its alert identifier.";
+            }
+
+            return;
+        }
+
+        processedConfirmId = ConfirmId;
+        isBusy = true;
+        var result = await Api.ConfirmAlertAsync(new ConfirmWebsiteAlertRequest { ConfirmId = ConfirmId.Value });
+        succeeded = result.Success;
+        statusMessage = result.Success ? result.Value?.Message : result.ErrorMessage;
+        isBusy = false;
+    }
+}

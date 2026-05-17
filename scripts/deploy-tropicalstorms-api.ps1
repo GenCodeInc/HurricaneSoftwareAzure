@@ -380,6 +380,42 @@ if ([string]::IsNullOrWhiteSpace($applicationInsightsConnectionString)) {
     $applicationInsightsConnectionString = [Environment]::GetEnvironmentVariable("ApplicationInsights__ConnectionString")
 }
 
+$websiteAcsConnectionString = [Environment]::GetEnvironmentVariable("AZURE_WEBSITE_ACS_CONNECTION_STRING")
+if ([string]::IsNullOrWhiteSpace($websiteAcsConnectionString)) {
+    $websiteAcsConnectionString = [Environment]::GetEnvironmentVariable("TROPICALSTORMS_WEBSITE_ACS_CONNECTION_STRING")
+}
+
+$websiteAcsCommunicationServiceName = [Environment]::GetEnvironmentVariable("AZURE_WEBSITE_ACS_COMMUNICATION_SERVICE_NAME")
+$websiteAcsSenderAddress = [Environment]::GetEnvironmentVariable("AZURE_WEBSITE_ACS_SENDER_ADDRESS")
+if ([string]::IsNullOrWhiteSpace($websiteAcsSenderAddress)) {
+    $websiteAcsSenderAddress = [Environment]::GetEnvironmentVariable("TROPICALSTORMS_WEBSITE_ACS_SENDER_ADDRESS")
+}
+
+$websiteAcsSenderDisplayName = [Environment]::GetEnvironmentVariable("AZURE_WEBSITE_ACS_SENDER_DISPLAY_NAME")
+if ([string]::IsNullOrWhiteSpace($websiteAcsSenderDisplayName)) {
+    $websiteAcsSenderDisplayName = [Environment]::GetEnvironmentVariable("TROPICALSTORMS_WEBSITE_ACS_SENDER_DISPLAY_NAME")
+}
+if ([string]::IsNullOrWhiteSpace($websiteAcsSenderDisplayName)) {
+    $websiteAcsSenderDisplayName = "Tracking The Eye"
+}
+
+if ([string]::IsNullOrWhiteSpace($websiteAcsConnectionString) -and -not [string]::IsNullOrWhiteSpace($websiteAcsCommunicationServiceName)) {
+    $communicationExtension = Try-Invoke-AzJson -Arguments @("extension", "show", "--name", "communication", "-o", "json")
+    if (-not $communicationExtension) {
+        Invoke-AzQuiet -Arguments @("config", "set", "extension.dynamic_install_allow_preview=true") | Out-Null
+        Invoke-AzQuiet -Arguments @("extension", "add", "--name", "communication", "--allow-preview", "true", "--yes") | Out-Null
+    }
+
+    $communicationKeys = Invoke-AzJson -Arguments @(
+        "communication", "list-key",
+        "--resource-group", $ResourceGroup,
+        "--name", $websiteAcsCommunicationServiceName,
+        "-o", "json"
+    )
+
+    $websiteAcsConnectionString = $communicationKeys.primaryConnectionString
+}
+
 Write-Step "Checking Azure access"
 Invoke-AzQuiet -Arguments @("account", "show", "-o", "json") | Out-Null
 
@@ -443,6 +479,15 @@ $appSettings = @(
     "TropicalStorms__LegacySoapShim__Path=/Services/TropicalStorms.asmx",
     "TropicalStorms__Email__Enabled=false"
 )
+
+if (-not [string]::IsNullOrWhiteSpace($websiteAcsConnectionString) -and -not [string]::IsNullOrWhiteSpace($websiteAcsSenderAddress)) {
+    $appSettings += @(
+        "TropicalStorms__Website__AcsEmail__Enabled=true",
+        "TropicalStorms__Website__AcsEmail__ConnectionString=$websiteAcsConnectionString",
+        "TropicalStorms__Website__AcsEmail__SenderAddress=$websiteAcsSenderAddress",
+        "TropicalStorms__Website__AcsEmail__SenderDisplayName=$websiteAcsSenderDisplayName"
+    )
+}
 
 if (-not [string]::IsNullOrWhiteSpace($applicationInsightsConnectionString)) {
     $appSettings += "APPLICATIONINSIGHTS_CONNECTION_STRING=$applicationInsightsConnectionString"

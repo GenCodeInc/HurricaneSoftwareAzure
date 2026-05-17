@@ -2,6 +2,181 @@
 
 Quick operator reference for the TropicalStorms Azure app, API, and SQL firewall.
 
+## Most Common Website Commands
+
+These are the three commands you will use most often for a simple HurricaneSoftware website update.
+
+### 1. Replace the Windows installer zip
+
+```powershell
+Copy-Item "D:\GenCode Main Development\www\hurricanesoftware.com\test\setuptte.zip" ".\src\HurricaneSoftware.Web\wwwroot\downloads\setuptte.zip" -Force
+```
+
+### 2. Publish the website
+
+```powershell
+dotnet publish .\src\HurricaneSoftware.Web\HurricaneSoftware.Web.csproj -c Release
+```
+
+### 3. Deploy the website
+
+```powershell
+npx @azure/static-web-apps-cli deploy .\src\HurricaneSoftware.Web\bin\Release\net8.0\publish\wwwroot --deployment-token "<token>" --app-name stapp-hurricanesoftware-cu66c7 --resource-group rg-eus2-gencode-enterprise --env production
+```
+
+## HurricaneSoftware Website
+
+### Replace the Windows installer zip
+
+When you build a new Windows installer, overwrite the hosted file here:
+
+```powershell
+.\src\HurricaneSoftware.Web\wwwroot\downloads\setuptte.zip
+```
+
+Example from the old website download location:
+
+```powershell
+Copy-Item "D:\GenCode Main Development\www\hurricanesoftware.com\test\setuptte.zip" ".\src\HurricaneSoftware.Web\wwwroot\downloads\setuptte.zip" -Force
+```
+
+That file is what the public website serves from:
+
+```powershell
+https://www.hurricanesoftware.com/downloads/setuptte.zip
+```
+
+### OnlyDeploySetupZip
+
+Short answer: not safely by itself.
+
+Azure Static Web Apps manual deploys publish a folder that represents the site output. There is not a normal "upload just one production file" feature for this setup.
+
+Important note:
+
+- If you try to deploy a folder that contains only `setuptte.zip`, you risk replacing the live site with an incomplete deployment.
+- The safe way is still: replace `wwwroot\downloads\setuptte.zip`, publish the website, then deploy the full published `wwwroot` output.
+
+Safe CLI way when only `setuptte.zip` changed:
+
+```powershell
+Copy-Item "D:\GenCode Main Development\www\hurricanesoftware.com\test\setuptte.zip" ".\src\HurricaneSoftware.Web\wwwroot\downloads\setuptte.zip" -Force
+dotnet publish .\src\HurricaneSoftware.Web\HurricaneSoftware.Web.csproj -c Release
+npx @azure/static-web-apps-cli deploy .\src\HurricaneSoftware.Web\bin\Release\net8.0\publish\wwwroot --deployment-token "<token>" --app-name stapp-hurricanesoftware-cu66c7 --resource-group rg-eus2-gencode-enterprise --env production
+```
+
+Portal UI way:
+
+Azure Static Web Apps does not have a normal portal screen where you browse to one file and upload only `setuptte.zip` into production.
+
+Use the portal for the token and verification, then do the actual deploy from your machine:
+
+1. Azure Portal > Static Web Apps > `stapp-hurricanesoftware-cu66c7`
+2. On `Overview`, select `Manage deployment token`
+3. Copy the deployment token
+4. On your machine, replace `setuptte.zip`, publish the website, and run the `npx @azure/static-web-apps-cli deploy ...` command
+5. Back in the portal, open the site and verify `/downloads/setuptte.zip`
+
+Bottom line:
+
+- `OnlyDeploySetupZip` is not a safe standalone production deploy method for this Static Web App
+- `Replace zip -> publish site -> deploy published wwwroot` is the safe method
+
+### Build the Blazor website
+
+Publishes the static HurricaneSoftware website payload that Azure Static Web Apps serves.
+
+```powershell
+dotnet publish .\src\HurricaneSoftware.Web\HurricaneSoftware.Web.csproj -c Release
+```
+
+Published files end up under:
+
+```powershell
+.\src\HurricaneSoftware.Web\bin\Release\net8.0\publish\wwwroot
+```
+
+### Static Web App details
+
+Current Azure Static Web App:
+
+- Name: `stapp-hurricanesoftware-cu66c7`
+- Resource group: `rg-eus2-gencode-enterprise`
+- Default hostname: `https://red-ocean-0a1dd550f.7.azurestaticapps.net`
+
+### Get the website deployment token
+
+Use this when you need to deploy the published Blazor files by hand.
+
+```powershell
+az staticwebapp secrets list --name stapp-hurricanesoftware-cu66c7 --resource-group rg-eus2-gencode-enterprise
+```
+
+### Deploy the website to Azure Static Web Apps
+
+After `dotnet publish`, deploy the built `wwwroot` output folder.
+
+```powershell
+npx @azure/static-web-apps-cli deploy .\src\HurricaneSoftware.Web\bin\Release\net8.0\publish\wwwroot --deployment-token "<token>" --app-name stapp-hurricanesoftware-cu66c7 --resource-group rg-eus2-gencode-enterprise --env production
+```
+
+If you want to pull the deployment token from Azure CLI first:
+
+```powershell
+az staticwebapp secrets list --name stapp-hurricanesoftware-cu66c7 --resource-group rg-eus2-gencode-enterprise
+```
+
+The token is the `properties.apiKey` value.
+
+### Update only the zip file and redeploy
+
+This is the exact CLI sequence when the only thing you changed is the Windows installer zip:
+
+```powershell
+Copy-Item "D:\GenCode Main Development\www\hurricanesoftware.com\test\setuptte.zip" ".\src\HurricaneSoftware.Web\wwwroot\downloads\setuptte.zip" -Force
+dotnet build .\src\HurricaneSoftware.Web\HurricaneSoftware.Web.csproj
+dotnet publish .\src\HurricaneSoftware.Web\HurricaneSoftware.Web.csproj -c Release
+npx @azure/static-web-apps-cli deploy .\src\HurricaneSoftware.Web\bin\Release\net8.0\publish\wwwroot --deployment-token "<token>" --app-name stapp-hurricanesoftware-cu66c7 --resource-group rg-eus2-gencode-enterprise --env production
+```
+
+### Portal UI way
+
+Azure Static Web Apps does not give you a simple browser upload button for replacing files in production. The portal UI is mainly used to get the deployment token and verify the deployment.
+
+Portal steps:
+
+1. Azure Portal > Static Web Apps > `stapp-hurricanesoftware-cu66c7`
+2. On `Overview`, select `Manage deployment token`
+3. Copy the deployment token
+4. Back on your machine, run the CLI deploy command above using that token
+5. In Azure Portal, return to the Static Web App and verify the site is serving the new file
+
+Portal verification:
+
+1. Azure Portal > Static Web Apps > `stapp-hurricanesoftware-cu66c7`
+2. `Overview` shows the default hostname
+3. Open the site and test `/downloads/setuptte.zip`
+4. If you are using the custom domain, also test `https://www.hurricanesoftware.com/downloads/setuptte.zip`
+
+### Website update checklist
+
+Use this order for simple website-only changes:
+
+```powershell
+dotnet build .\src\HurricaneSoftware.Web\HurricaneSoftware.Web.csproj
+dotnet publish .\src\HurricaneSoftware.Web\HurricaneSoftware.Web.csproj -c Release
+npx @azure/static-web-apps-cli deploy .\src\HurricaneSoftware.Web\bin\Release\net8.0\publish\wwwroot --deployment-token "<token>" --app-name stapp-hurricanesoftware-cu66c7 --resource-group rg-eus2-gencode-enterprise --env production
+```
+
+Notes:
+
+- Static files live in `src\HurricaneSoftware.Web\wwwroot`
+- The Windows installer now lives at `src\HurricaneSoftware.Web\wwwroot\downloads\setuptte.zip`
+- Menu changes are in `src\HurricaneSoftware.Web\Layout\MainLayout.razor`
+- Download page content is in `src\HurricaneSoftware.Web\Pages\Download.razor`
+- Static Web Apps manual deployments in this repo use `npx @azure/static-web-apps-cli deploy`
+- The Azure Portal is used to copy/reset the deployment token and verify the live site, not to directly upload the website files
+
 ## App Service Monitoring
 
 ### Tail live app logs

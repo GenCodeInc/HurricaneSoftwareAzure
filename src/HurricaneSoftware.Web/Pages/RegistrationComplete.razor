@@ -1,0 +1,107 @@
+@page "/registration/complete"
+@page "/RegistrationComplete.aspx"
+@inject WebsiteApiClient Api
+@inject IJSRuntime JS
+@using System.Text.Json
+
+<PageTitle>Registration Complete</PageTitle>
+
+<section class="page-section narrow">
+    <p class="eyebrow">Registration complete</p>
+    <h1>Finishing your order.</h1>
+
+    @if (isBusy)
+    {
+        <p class="status">Completing your PayPal order and issuing your registration details...</p>
+    }
+    else if (completion is not null)
+    {
+        <div class="success-panel">
+            <p class="status success">@completion.Message</p>
+            <dl class="summary-list">
+                <div>
+                    <dt>User ID</dt>
+                    <dd>@completion.UserId</dd>
+                </div>
+                <div>
+                    <dt>Registration code</dt>
+                    <dd>@completion.RegistrationNumber</dd>
+                </div>
+                <div>
+                    <dt>Expiration</dt>
+                    <dd>@completion.ExpirationDateUtc.ToLocalTime().ToString("f")</dd>
+                </div>
+                <div>
+                    <dt>Transaction</dt>
+                    <dd>@completion.TransactionId</dd>
+                </div>
+            </dl>
+            <p class="quote-source">Please save this information from your email. Do not use the browser back button to repeat the order.</p>
+        </div>
+    }
+    else if (!string.IsNullOrWhiteSpace(statusMessage))
+    {
+        <p class="status error">@statusMessage</p>
+    }
+</section>
+
+@code {
+    [SupplyParameterFromQuery(Name = "token")]
+    public string? Token { get; set; }
+
+    private string? processedToken;
+    private bool isBusy;
+    private string? statusMessage;
+    private CapturePayPalWebsiteOrderResponse? completion;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (string.IsNullOrWhiteSpace(Token) || processedToken == Token)
+        {
+            if (string.IsNullOrWhiteSpace(Token))
+            {
+                statusMessage = "PayPal did not return an order token. If you cancelled checkout, no changes were made.";
+            }
+
+            return;
+        }
+
+        processedToken = Token;
+        isBusy = true;
+        statusMessage = null;
+
+        var checkoutJson = await JS.InvokeAsync<string?>("hurricaneSite.loadCheckout");
+        if (string.IsNullOrWhiteSpace(checkoutJson))
+        {
+            statusMessage = "The site could not find the checkout details needed to finalize your order. Please start checkout again.";
+            isBusy = false;
+            return;
+        }
+
+        var checkout = JsonSerializer.Deserialize<WebsiteCheckoutRequest>(checkoutJson);
+        if (checkout is null)
+        {
+            statusMessage = "The saved checkout request could not be read. Please start checkout again.";
+            isBusy = false;
+            return;
+        }
+
+        var result = await Api.CapturePayPalOrderAsync(new CaptureWebsiteCheckoutRequest
+        {
+            PayPalOrderId = Token,
+            Checkout = checkout,
+        });
+
+        if (result.Success)
+        {
+            completion = result.Value;
+            await JS.InvokeVoidAsync("hurricaneSite.clearCheckout");
+        }
+        else
+        {
+            statusMessage = result.ErrorMessage;
+        }
+
+        isBusy = false;
+    }
+}

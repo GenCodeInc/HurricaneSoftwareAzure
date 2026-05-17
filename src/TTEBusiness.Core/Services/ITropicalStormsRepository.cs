@@ -37,6 +37,8 @@ public interface ITropicalStormsRepository
 
     Task<IReadOnlyList<RegistrationRecordItem>> GetRegistrationsByCellAlertAsync(string value, CancellationToken cancellationToken);
 
+    Task CreateRegistrationAsync(RegistrationRecordItem registration, CancellationToken cancellationToken);
+
     Task UpdateRegistrationAsync(RegistrationRecordItem registration, CancellationToken cancellationToken);
 
     Task<IReadOnlyList<AlertRecordItem>> GetAlertsAsync(
@@ -49,6 +51,8 @@ public interface ITropicalStormsRepository
         CancellationToken cancellationToken);
 
     Task<AlertRecordItem> CreateAlertAsync(int alertTypeId, string value, bool confirmed, int applicationTypeId, string externalKey, CancellationToken cancellationToken);
+
+    Task UpdateAlertConfirmationAsync(int alertId, bool confirmed, CancellationToken cancellationToken);
 
     Task DeleteAlertAsync(int alertId, CancellationToken cancellationToken);
 

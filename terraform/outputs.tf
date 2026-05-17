@@ -72,3 +72,33 @@ output "function_sql_private_endpoint_id" {
   description = "Private endpoint resource ID used for Azure SQL when enabled."
   value       = var.deploy_function_app && var.enable_function_vnet_integration && var.enable_function_sql_private_endpoint ? azurerm_private_endpoint.function_sql[0].id : null
 }
+
+output "static_web_app_name" {
+  description = "Azure Static Web App name when deploy_static_web_app is enabled."
+  value       = var.deploy_static_web_app ? azurerm_static_web_app.website[0].name : null
+}
+
+output "static_web_app_default_hostname" {
+  description = "Default hostname for the Azure Static Web App when deploy_static_web_app is enabled."
+  value       = var.deploy_static_web_app ? azurerm_static_web_app.website[0].default_host_name : null
+}
+
+output "website_acs_email_service_name" {
+  description = "ACS Email Service name when deploy_website_acs_email is enabled."
+  value       = var.deploy_website_acs_email ? azapi_resource.website_acs_email_service[0].name : null
+}
+
+output "website_acs_communication_service_name" {
+  description = "ACS Communication Service name when deploy_website_acs_email is enabled."
+  value       = var.deploy_website_acs_email ? azapi_resource.website_acs_communication_service[0].name : null
+}
+
+output "website_acs_sender_domain" {
+  description = "Azure-managed ACS sender domain when deploy_website_acs_email is enabled."
+  value       = var.deploy_website_acs_email ? jsondecode(azapi_resource.website_acs_domain[0].output).properties.fromSenderDomain : null
+}
+
+output "website_acs_sender_address" {
+  description = "Sender address for website-originated ACS email when deploy_website_acs_email is enabled."
+  value       = var.deploy_website_acs_email ? format("%s@%s", var.website_acs_sender_username, jsondecode(azapi_resource.website_acs_domain[0].output).properties.fromSenderDomain) : null
+}

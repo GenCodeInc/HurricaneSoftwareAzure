@@ -7,6 +7,8 @@ This folder recreates the working Azure SQL shape from this workspace in any Azu
 - cheapest practical baseline using `Basic` and `Local` backup redundancy
 - optional local DACPAC publish with `SqlPackage`
 - optional Azure Functions Flex Consumption infrastructure for the NHC parser
+- optional Azure Static Web App infrastructure for the rebuilt HurricaneSoftware public website
+- optional Azure Communication Services email infrastructure for website-originated mail
 
 ## What it builds
 
@@ -32,6 +34,19 @@ When `deploy_function_app = true`, Terraform also creates:
 - a dedicated private-endpoint subnet in the same VNet
 - an Azure SQL private endpoint and `privatelink.database.windows.net` private DNS zone
 
+When `deploy_static_web_app = true`, Terraform also creates:
+
+- one separate Azure Static Web App for the public HurricaneSoftware website
+- a standalone hostname that can be tested before moving the production CNAME
+- Free tier hosting intended for the Blazor WebAssembly front-end in `src/HurricaneSoftware.Web`
+
+When `deploy_website_acs_email = true`, Terraform also creates:
+
+- one ACS Email Service for the public website email flows
+- one Azure-managed ACS email domain, already verified by Azure
+- one sender username, defaulting to `noreply`
+- one linked ACS Communication Service that can provide the connection string used by `TropicalStorms.Api`
+
 For the safer default posture, leave `allow_azure_services = false`, use the private SQL path for Azure apps, and keep `client_ip_address` only for temporary direct admin access.
 
 If `publish_dacpacs = true`, Terraform will also run a local PowerShell publish step after the databases exist.
@@ -52,6 +67,8 @@ If `publish_dacpacs = true`, Terraform will also run a local PowerShell publish 
 - `main.tf`: resource creation and optional publish hook
 - `outputs.tf`: resulting server and database outputs
 - Function App outputs are also included when `deploy_function_app = true`
+- Static Web App outputs are also included when `deploy_static_web_app = true`
+- ACS email outputs are also included when `deploy_website_acs_email = true`
 - `terraform.tfvars.example`: example values
 - `scripts/publish-dacpacs.ps1`: local `SqlPackage` publish step used by Terraform
 
@@ -127,6 +144,23 @@ If you only want infrastructure, leave `publish_dacpacs = false`.
 ## Function App deployment notes
 
 Set `deploy_function_app = true` to provision the parser Function App infrastructure in the same resource group.
+
+Set `deploy_static_web_app = true` to provision a separate Azure Static Web App for the new Blazor website.
+
+Set `deploy_website_acs_email = true` to provision ACS-backed website email resources for lost-registration, contact, and order emails.
+
+Important website-hosting note:
+
+- this is intentionally separate from the existing API host so current mobile and SOAP users do not share the same public front-end surface
+- the Blazor site stays static on Static Web Apps while dynamic registration, contact, alert confirmation, and checkout routes continue to run on the existing `TropicalStorms.Api` host
+- the website-originated email flows now run on Azure Communication Services instead of the legacy SMTP path
+- you can keep the generated `azurestaticapps.net` hostname for testing and move the production CNAME later
+
+ACS email note:
+
+- Terraform creates the ACS Email Service, Azure-managed domain, sender username, and linked Communication Service
+- use the `website_acs_communication_service_name` and `website_acs_sender_address` outputs when you configure `deploy-tropicalstorms-api.ps1` or the live App Service settings
+- the current live sender address pattern is `noreply@<azure-managed-domain>.azurecomm.net`
 
 Terraform sets these Function App settings:
 

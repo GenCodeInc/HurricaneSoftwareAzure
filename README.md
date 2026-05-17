@@ -15,6 +15,9 @@ The new NHC parser migration work now also lives directly in this workspace so y
 - solution: `NHCParser.Azure.sln`
 - reusable library: `src/TTEBusiness.Core`
 - Azure Functions app: `src/NHCParser.Function`
+- Web API host: `src/TropicalStorms.Api`
+- standalone public website front-end: `src/HurricaneSoftware.Web`
+- website-originated email now runs on Azure Communication Services for lost-registration, contact, and order confirmations
 
 Build from the repo root:
 
@@ -105,6 +108,14 @@ Useful flags:
 .\scripts\deploy-azure-stack.ps1 -SkipFunctionPublish
 .\scripts\deploy-azure-stack.ps1 -SkipBuild
 ```
+
+For the public website API host and its ACS email settings, use:
+
+```powershell
+.\scripts\deploy-tropicalstorms-api.ps1
+```
+
+If your `.env` contains `AZURE_WEBSITE_ACS_COMMUNICATION_SERVICE_NAME` plus `AZURE_WEBSITE_ACS_SENDER_ADDRESS`, the API deployment script will also wire the website ACS settings into the live App Service.
 
 ## Optional flags
 

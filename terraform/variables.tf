@@ -115,6 +115,102 @@ variable "deploy_function_app" {
   default     = false
 }
 
+variable "deploy_static_web_app" {
+  description = "Whether to create a separate Azure Static Web App for the HurricaneSoftware public website."
+  type        = bool
+  default     = false
+}
+
+variable "deploy_website_acs_email" {
+  description = "Whether to provision Azure Communication Services email resources for the HurricaneSoftware website email flows."
+  type        = bool
+  default     = false
+}
+
+variable "website_acs_location" {
+  description = "Azure location for Communication Services email resources. Global is required for the current ACS email resources."
+  type        = string
+  default     = "global"
+}
+
+variable "website_acs_data_location" {
+  description = "Data location for ACS email and communication resources. United States matches the current live setup."
+  type        = string
+  default     = "unitedstates"
+}
+
+variable "website_acs_email_service_name" {
+  description = "Optional ACS Email Service name. Leave null to generate one."
+  type        = string
+  default     = null
+}
+
+variable "website_acs_email_service_name_prefix" {
+  description = "Prefix used when website_acs_email_service_name is not provided."
+  type        = string
+  default     = "email-hurricanesoftware"
+}
+
+variable "website_acs_communication_service_name" {
+  description = "Optional ACS Communication Service name. Leave null to generate one."
+  type        = string
+  default     = null
+}
+
+variable "website_acs_communication_service_name_prefix" {
+  description = "Prefix used when website_acs_communication_service_name is not provided."
+  type        = string
+  default     = "acs-hurricanesoftware"
+}
+
+variable "website_acs_domain_name" {
+  description = "Domain resource name for the Azure-managed ACS email domain. Azure-managed domains must use AzureManagedDomain."
+  type        = string
+  default     = "AzureManagedDomain"
+}
+
+variable "website_acs_sender_username" {
+  description = "Sender username used for website-originated ACS email."
+  type        = string
+  default     = "noreply"
+}
+
+variable "website_acs_sender_display_name" {
+  description = "Display name associated with the website ACS sender username resource."
+  type        = string
+  default     = "Tracking The Eye"
+}
+
+variable "static_web_app_name" {
+  description = "Optional globally unique Static Web App name. Leave null to generate one."
+  type        = string
+  default     = null
+}
+
+variable "static_web_app_name_prefix" {
+  description = "Prefix used when static_web_app_name is not provided."
+  type        = string
+  default     = "stapp-hurricanesoftware"
+}
+
+variable "static_web_app_location" {
+  description = "Optional Azure region for the Static Web App. Leave null to reuse location."
+  type        = string
+  default     = null
+}
+
+variable "static_web_app_sku_tier" {
+  description = "SKU tier for the Static Web App. Free is the target low-cost option."
+  type        = string
+  default     = "Free"
+}
+
+variable "static_web_app_sku_size" {
+  description = "SKU size for the Static Web App. Free is the target low-cost option."
+  type        = string
+  default     = "Free"
+}
+
 variable "function_app_name" {
   description = "Optional globally unique Function App name. Leave null to generate one."
   type        = string

@@ -1,0 +1,33 @@
+﻿@inherits LayoutComponentBase
+<div class="site-shell">
+    <header class="site-header">
+        <div class="brand-block">
+            <div class="masthead-strip" aria-hidden="true">
+                <img src="/images/hurpalm.jpg" alt="" />
+                <img src="/images/compass1.jpg" alt="" />
+                <img src="/images/compass2.jpg" alt="" />
+                <img src="/images/compass3.jpg" alt="" />
+            </div>
+            <NavLink class="brand-link" href="/">HurricaneSoftware.com</NavLink>
+            <p class="brand-tagline">Tracking The Eye, award winning hurricane tracking software for Windows, iPhone, iPad and Android.</p>
+        </div>
+
+        <nav class="site-nav" aria-label="Primary">
+            <NavLink href="/" Match="NavLinkMatch.All">Home</NavLink>
+            <NavLink href="/screenshots">Screenshots</NavLink>
+            <NavLink href="/download">Download</NavLink>
+            <NavLink href="/awards">Awards</NavLink>
+            @* <NavLink href="/register">Register</NavLink> *@
+            <NavLink href="/lost-registration">Lost Registration</NavLink>
+            <NavLink href="/contact">Contact</NavLink>
+        </nav>
+    </header>
+
+    <main class="site-main">
+        @Body
+    </main>
+
+    <footer class="site-footer">
+        <p>Tracking The Eye public website, downloads, screenshots, registration recovery, and support.</p>
+    </footer>
+</div>

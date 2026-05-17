@@ -21,6 +21,24 @@ resource "random_string" "function_suffix" {
   special = false
 }
 
+resource "random_string" "static_web_app_suffix" {
+  count   = var.deploy_static_web_app && var.static_web_app_name == null ? 1 : 0
+  length  = 8
+  upper   = false
+  lower   = true
+  numeric = true
+  special = false
+}
+
+resource "random_string" "website_acs_suffix" {
+  count   = var.deploy_website_acs_email && (var.website_acs_email_service_name == null || var.website_acs_communication_service_name == null) ? 1 : 0
+  length  = 8
+  upper   = false
+  lower   = true
+  numeric = true
+  special = false
+}
+
 locals {
   generated_server_suffix = var.sql_server_name == null ? random_string.server_suffix[0].result : null
   server_name             = var.sql_server_name != null ? var.sql_server_name : format("%s-%s", var.sql_server_name_prefix, local.generated_server_suffix)
@@ -30,6 +48,11 @@ locals {
   function_storage_name     = var.function_storage_account_name != null ? var.function_storage_account_name : (var.deploy_function_app ? format("%s%s", var.function_storage_account_name_prefix, local.generated_function_suffix) : null)
   function_vnet_name        = var.function_vnet_name != null ? var.function_vnet_name : (var.deploy_function_app && var.enable_function_vnet_integration ? format("vnet-nhcparser-%s", local.generated_function_suffix) : null)
   function_sql_connection_string = var.function_sql_connection_string != null ? var.function_sql_connection_string : (var.deploy_function_app ? format("Server=tcp:%s,1433;Initial Catalog=%s;Persist Security Info=False;User ID=%s;Password=%s;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;", azurerm_mssql_server.this.fully_qualified_domain_name, var.function_sql_database_name, var.administrator_login, var.administrator_password) : null)
+  generated_static_web_app_suffix = var.deploy_static_web_app && var.static_web_app_name == null ? random_string.static_web_app_suffix[0].result : null
+  static_web_app_name             = var.static_web_app_name != null ? var.static_web_app_name : (var.deploy_static_web_app ? format("%s-%s", var.static_web_app_name_prefix, local.generated_static_web_app_suffix) : null)
+  generated_website_acs_suffix            = var.deploy_website_acs_email && (var.website_acs_email_service_name == null || var.website_acs_communication_service_name == null) ? random_string.website_acs_suffix[0].result : null
+  website_acs_email_service_name          = var.website_acs_email_service_name != null ? var.website_acs_email_service_name : (var.deploy_website_acs_email ? format("%s-%s", var.website_acs_email_service_name_prefix, local.generated_website_acs_suffix) : null)
+  website_acs_communication_service_name  = var.website_acs_communication_service_name != null ? var.website_acs_communication_service_name : (var.deploy_website_acs_email ? format("%s-%s", var.website_acs_communication_service_name_prefix, local.generated_website_acs_suffix) : null)
 }
 
 resource "azurerm_resource_group" "this" {
@@ -45,6 +68,7 @@ data "azurerm_resource_group" "existing" {
 
 locals {
   effective_resource_group_name = var.resource_group_name
+  effective_resource_group_id   = var.create_resource_group ? azurerm_resource_group.this[0].id : data.azurerm_resource_group.existing[0].id
 }
 
 resource "azurerm_mssql_server" "this" {
@@ -277,5 +301,76 @@ resource "azurerm_function_app_flex_consumption" "this" {
   site_config {
     minimum_tls_version = "1.2"
     vnet_route_all_enabled = var.enable_function_vnet_integration ? var.function_vnet_route_all_enabled : false
+  }
+}
+
+resource "azurerm_static_web_app" "website" {
+  count               = var.deploy_static_web_app ? 1 : 0
+  name                = local.static_web_app_name
+  resource_group_name = local.effective_resource_group_name
+  location            = var.static_web_app_location != null ? var.static_web_app_location : var.location
+  sku_tier            = var.static_web_app_sku_tier
+  sku_size            = var.static_web_app_sku_size
+}
+
+resource "azapi_resource" "website_acs_email_service" {
+  count                     = var.deploy_website_acs_email ? 1 : 0
+  type                      = "Microsoft.Communication/emailServices@2023-03-31"
+  name                      = local.website_acs_email_service_name
+  parent_id                 = local.effective_resource_group_id
+  location                  = var.website_acs_location
+  schema_validation_enabled = false
+
+  body = {
+    properties = {
+      dataLocation = var.website_acs_data_location
+    }
+  }
+}
+
+resource "azapi_resource" "website_acs_domain" {
+  count                     = var.deploy_website_acs_email ? 1 : 0
+  type                      = "Microsoft.Communication/emailServices/domains@2023-03-31"
+  name                      = var.website_acs_domain_name
+  parent_id                 = azapi_resource.website_acs_email_service[0].id
+  location                  = var.website_acs_location
+  schema_validation_enabled = false
+
+  body = {
+    properties = {
+      domainManagement       = "AzureManaged"
+      userEngagementTracking = "Disabled"
+    }
+  }
+}
+
+resource "azapi_resource" "website_acs_sender_username" {
+  count                     = var.deploy_website_acs_email ? 1 : 0
+  type                      = "Microsoft.Communication/emailServices/domains/senderUsernames@2023-03-31"
+  name                      = var.website_acs_sender_username
+  parent_id                 = azapi_resource.website_acs_domain[0].id
+  schema_validation_enabled = false
+
+  body = {
+    properties = {
+      displayName = var.website_acs_sender_display_name
+      username    = var.website_acs_sender_username
+    }
+  }
+}
+
+resource "azapi_resource" "website_acs_communication_service" {
+  count                     = var.deploy_website_acs_email ? 1 : 0
+  type                      = "Microsoft.Communication/communicationServices@2023-03-31"
+  name                      = local.website_acs_communication_service_name
+  parent_id                 = local.effective_resource_group_id
+  location                  = var.website_acs_location
+  schema_validation_enabled = false
+
+  body = {
+    properties = {
+      dataLocation  = var.website_acs_data_location
+      linkedDomains = [azapi_resource.website_acs_domain[0].id]
+    }
   }
 }

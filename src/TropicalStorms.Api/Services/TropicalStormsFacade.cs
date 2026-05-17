@@ -1,6 +1,7 @@
 using System.Data;
 using System.Globalization;
 using System.Net.Mail;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TTENET.TTEBusiness.Core.Models;
 using TTENET.TTEBusiness.Core.Services;
@@ -11,7 +12,8 @@ namespace TropicalStorms.Api.Services;
 public sealed class TropicalStormsFacade(
     ITropicalStormsRepository repository,
     ITropicalStormsEmailSender emailSender,
-    IOptions<TropicalStormsEmailOptions> emailOptions) : ITropicalStormsFacade
+    IOptions<TropicalStormsEmailOptions> emailOptions,
+    ILogger<TropicalStormsFacade> logger) : ITropicalStormsFacade
 {
     private const int TrackingTheEyeApplicationType = 1;
     private const int GadgetApplicationType = 2;
@@ -156,39 +158,45 @@ public sealed class TropicalStormsFacade(
 
     public async Task<ReturnMessage> RetrieveRegistrationAsync(string email, CancellationToken cancellationToken)
     {
-        var returnMessage = new ReturnMessage(100, "Not set");
+        var normalizedEmail = email?.Trim() ?? string.Empty;
+        if (!MailAddress.TryCreate(normalizedEmail, out _))
+        {
+            return new ReturnMessage(2, "Please make sure you entered a valid email address.");
+        }
+
+        RegistrationRecordItem? registration;
+        try
+        {
+            registration = await repository.GetRegistrationByEmailAsync(normalizedEmail, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Failed to retrieve registration for {Email}.", normalizedEmail);
+            return new ReturnMessage(2, "There was an error retrieving your registration information. Please try again shortly.");
+        }
+
+        if (registration is null || string.IsNullOrWhiteSpace(registration.UserId))
+        {
+            return new ReturnMessage(1, $"No registration code was found for email address {normalizedEmail}");
+        }
+
+        if (!emailSender.IsEnabled)
+        {
+            return new ReturnMessage(0, $"Registration information was found for {normalizedEmail}, but email delivery is not configured.");
+        }
+
+        var body = $"UserID = {registration.UserId}\nRegistrationCode = {registration.RegistrationNumber}\nDateExpire = {registration.DateExpire.ToString("u", CultureInfo.InvariantCulture)}";
 
         try
         {
-            if (!MailAddress.TryCreate(email, out _))
-            {
-                return new ReturnMessage(2, "Please make sure you entered a valid email address.");
-            }
-
-            var registration = await repository.GetRegistrationByEmailAsync(email, cancellationToken).ConfigureAwait(false);
-            if (registration is null || string.IsNullOrWhiteSpace(registration.UserId))
-            {
-                return new ReturnMessage(1, $"No registration code was found for email address {email}");
-            }
-
-            var body = $"UserID = {registration.UserId}\nRegistrationCode = {registration.RegistrationNumber}\nDateExpire = {registration.DateExpire.ToString("u", CultureInfo.InvariantCulture)}";
-            if (emailSender.IsEnabled)
-            {
-                await emailSender.SendAsync(email, "Tracking The Eye Registration Code", body, cancellationToken).ConfigureAwait(false);
-            }
-
-            returnMessage.MessageNumber = 0;
-            returnMessage.Message = emailSender.IsEnabled
-                ? $"Your registration information has been sent to {email}"
-                : $"Registration information was found for {email}, but email delivery is not configured.";
+            await emailSender.SendAsync(normalizedEmail, "Tracking The Eye Registration Code", body, cancellationToken).ConfigureAwait(false);
+            return new ReturnMessage(0, $"Your registration information has been sent to {normalizedEmail}");
         }
-        catch
+        catch (Exception exception)
         {
-            returnMessage.MessageNumber = 2;
-            returnMessage.Message = "Please make sure you entered a valid email address.";
+            logger.LogError(exception, "Failed to send registration recovery email to {Email}.", normalizedEmail);
+            return new ReturnMessage(2, $"We found registration information for {normalizedEmail}, but there was a problem sending the email. Please try again shortly.");
         }
-
-        return returnMessage;
     }
 
     public async Task<UserResult> LoginUserAsync(string userId, string registrationNumber, string osBinaryTime, int numberOfTimesLoggedIn, bool isRegistered, string version, string promo, CancellationToken cancellationToken)

@@ -1,0 +1,16 @@
+﻿<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Page Not Found</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <section class="page-section narrow">
+                <p class="eyebrow">Not found</p>
+                <h1>That route is not part of the migrated public site.</h1>
+                <p class="lede">Use the main navigation to get back to the preserved public pages from the legacy HurricaneSoftware.com site.</p>
+            </section>
+        </LayoutView>
+    </NotFound>
+</Router>

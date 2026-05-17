@@ -1,0 +1,205 @@
+@page "/register"
+@page "/RegisterNow.aspx"
+@page "/Registration.aspx"
+@page "/PayByCheck.aspx"
+@inject WebsiteApiClient Api
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+@using System.Text.Json
+
+<PageTitle>Register</PageTitle>
+
+<section class="page-section narrow">
+    <p class="eyebrow">Register</p>
+    <h1>Register or renew Tracking The Eye.</h1>
+    <p class="lede">Choose a personal or corporate order, review the quote, and continue to PayPal. The checkout and email delivery flow remain live and unchanged on the backend.</p>
+</section>
+
+<section class="form-panel wide">
+    <EditForm Model="form" OnValidSubmit="StartCheckoutAsync">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="toggle-row">
+            <label><InputCheckbox @bind-Value="form.IsRenewal" /> Renewal order</label>
+            <label><InputCheckbox @bind-Value="form.IsCorporate" /> Corporate order</label>
+            <label><InputCheckbox @bind-Value="form.IncludeFlashDrive" /> Add flash drive fulfillment note</label>
+        </div>
+
+        @if (form.IsRenewal)
+        {
+            <label class="field">
+                <span>Renewal email</span>
+                <InputText @bind-Value="form.RenewalEmail" />
+            </label>
+        }
+
+        <div class="form-grid two-up">
+            @if (form.IsCorporate)
+            {
+                <label class="field">
+                    <span>Seat count</span>
+                    <InputSelect @bind-Value="seatCountText">
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="250">250</option>
+                        <option value="500">500</option>
+                        <option value="1000">1000</option>
+                    </InputSelect>
+                </label>
+            }
+            else
+            {
+                <label class="field">
+                    <span>Term</span>
+                    <InputSelect @bind-Value="termText">
+                        <option value="1">1 year</option>
+                        <option value="3">3 years</option>
+                    </InputSelect>
+                </label>
+            }
+
+            <label class="field">
+                <span>Promo code</span>
+                <InputText @bind-Value="form.PromoCode" />
+            </label>
+            <label class="field">
+                <span>First name</span>
+                <InputText @bind-Value="form.FirstName" />
+            </label>
+            <label class="field">
+                <span>Last name</span>
+                <InputText @bind-Value="form.LastName" />
+            </label>
+            <label class="field">
+                <span>Email</span>
+                <InputText @bind-Value="form.Email" />
+            </label>
+            <label class="field">
+                <span>Confirm email</span>
+                <InputText @bind-Value="form.ConfirmEmail" />
+            </label>
+            <label class="field field-span-2">
+                <span>Address 1</span>
+                <InputText @bind-Value="form.Address1" />
+            </label>
+            <label class="field field-span-2">
+                <span>Address 2</span>
+                <InputText @bind-Value="form.Address2" />
+            </label>
+            <label class="field">
+                <span>City</span>
+                <InputText @bind-Value="form.City" />
+            </label>
+            <label class="field">
+                <span>State or province</span>
+                <InputText @bind-Value="form.StateOrProvince" />
+            </label>
+            <label class="field">
+                <span>Postal code</span>
+                <InputText @bind-Value="form.PostalCode" />
+            </label>
+            <label class="field">
+                <span>Country</span>
+                <InputText @bind-Value="form.CountryName" />
+            </label>
+            <label class="field">
+                <span>Country code</span>
+                <InputText @bind-Value="form.CountryCode" />
+            </label>
+        </div>
+
+        <div class="button-row">
+            <button class="button-secondary" disabled="@isSubmitting" type="button" @onclick="ReviewQuoteAsync">Review total</button>
+            <button class="button-primary" disabled="@isSubmitting" type="submit">@(isSubmitting ? "Preparing checkout..." : "Continue to PayPal")</button>
+        </div>
+    </EditForm>
+
+    @if (quote is not null)
+    {
+        <section class="quote-box">
+            <p class="card-kicker">Current quote</p>
+            <h2>@quote.Description</h2>
+            <p class="quote-amount">@quote.Amount.ToString("C")</p>
+            <p class="quote-meta">@quote.Currency • @(quote.IsCorporate ? $"{quote.SeatCount} seats" : $"{quote.TermYears}-year term")</p>
+        </section>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(statusMessage))
+    {
+        <p class="status @(lastActionSucceeded ? "success" : "error")">@statusMessage</p>
+    }
+</section>
+
+@code {
+    private WebsiteCheckoutRequest form = new();
+    private WebsiteOrderQuoteResponse? quote;
+    private bool isSubmitting;
+    private bool lastActionSucceeded;
+    private string? statusMessage;
+
+    private string termText
+    {
+        get => form.TermYears.ToString();
+        set => form.TermYears = int.TryParse(value, out var parsed) ? parsed : 1;
+    }
+
+    private string seatCountText
+    {
+        get => (form.SeatCount ?? 25).ToString();
+        set => form.SeatCount = int.TryParse(value, out var parsed) ? parsed : 25;
+    }
+
+    protected override void OnInitialized()
+    {
+        form.TermYears = 1;
+        form.SeatCount = 25;
+    }
+
+    private async Task ReviewQuoteAsync()
+    {
+        ApplyRuntimeFields();
+        isSubmitting = true;
+        statusMessage = null;
+
+        var result = await Api.QuoteAsync(form);
+        quote = result.Value;
+        lastActionSucceeded = result.Success;
+        statusMessage = result.Success ? $"Current total: {result.Value?.Amount.ToString("C")}" : result.ErrorMessage;
+
+        isSubmitting = false;
+    }
+
+    private async Task StartCheckoutAsync()
+    {
+        ApplyRuntimeFields();
+        isSubmitting = true;
+        statusMessage = null;
+
+        var result = await Api.CreatePayPalOrderAsync(form);
+        lastActionSucceeded = result.Success;
+        quote = result.Value?.Quote;
+        statusMessage = result.Success ? "Redirecting you to PayPal..." : result.ErrorMessage;
+
+        if (result.Success && result.Value is not null)
+        {
+            await JS.InvokeVoidAsync("hurricaneSite.saveCheckout", JsonSerializer.Serialize(form));
+            await JS.InvokeVoidAsync("hurricaneSite.redirect", result.Value.ApprovalUrl);
+        }
+
+        isSubmitting = false;
+    }
+
+    private void ApplyRuntimeFields()
+    {
+        var baseUrl = Navigation.BaseUri.TrimEnd('/');
+        form.ReturnUrl = $"{baseUrl}/registration/complete";
+        form.CancelUrl = $"{baseUrl}/register";
+        form.CountryCode = (form.CountryCode ?? "US").Trim().ToUpperInvariant();
+        if (!form.IsCorporate)
+        {
+            form.SeatCount = null;
+        }
+    }
+}

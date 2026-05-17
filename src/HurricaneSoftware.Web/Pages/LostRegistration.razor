@@ -1,0 +1,54 @@
+@page "/lost-registration"
+@page "/LostYourRegCode.aspx"
+@inject WebsiteApiClient Api
+
+<PageTitle>Lost Registration</PageTitle>
+
+<section class="page-section narrow">
+    <p class="eyebrow">Lost Registration</p>
+    <h1>Recover your registration information by email.</h1>
+    <p class="lede">If you cannot find your registration number in the trackeye.ini file, send your email address here and the working recovery flow will check for your saved registration details.</p>
+</section>
+
+<section class="form-panel narrow">
+    <EditForm Model="form" OnValidSubmit="SubmitAsync">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <label class="field">
+            <span>Email address</span>
+            <InputText @bind-Value="form.Email" />
+        </label>
+
+        <button class="button-primary" disabled="@isSubmitting" type="submit">@(isSubmitting ? "Checking..." : "Send registration info")</button>
+    </EditForm>
+
+    @if (!string.IsNullOrWhiteSpace(statusMessage))
+    {
+        <p class="status @(lastSubmitSucceeded ? "success" : "error")">@statusMessage</p>
+    }
+</section>
+
+@code {
+    private RecoverRegistrationRequest form = new();
+    private bool isSubmitting;
+    private bool lastSubmitSucceeded;
+    private string? statusMessage;
+
+    private async Task SubmitAsync()
+    {
+        isSubmitting = true;
+        statusMessage = null;
+
+        var result = await Api.RecoverRegistrationAsync(form);
+        lastSubmitSucceeded = result.Success && result.Value?.MessageNumber == 0;
+        statusMessage = result.Success ? result.Value?.Message : result.ErrorMessage;
+
+        if (result.Success && result.Value?.MessageNumber == 0)
+        {
+            form = new RecoverRegistrationRequest();
+        }
+
+        isSubmitting = false;
+    }
+}

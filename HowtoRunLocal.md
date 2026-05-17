@@ -6,6 +6,7 @@ This guide shows how to run both services on this machine so you can step throug
 
 - `TropicalStorms.Api` runs locally as a normal ASP.NET Core app.
 - `NHCParser.Function` runs locally with Azure Functions Core Tools.
+- `HurricaneSoftware.Web` runs locally as a standalone Blazor WebAssembly front-end for the public website migration.
 - Both services need a SQL connection string if you want database-backed behavior.
 
 ## Prerequisites
@@ -46,6 +47,13 @@ Optional telemetry key:
 
 - `ApplicationInsights__ConnectionString` or `APPLICATIONINSIGHTS_CONNECTION_STRING`
 
+Optional website ACS email keys for local website email testing:
+
+- `TropicalStorms__Website__AcsEmail__Enabled`
+- `TropicalStorms__Website__AcsEmail__ConnectionString`
+- `TropicalStorms__Website__AcsEmail__SenderAddress`
+- `TropicalStorms__Website__AcsEmail__SenderDisplayName`
+
 ### Quick run
 
 From the repo root:
@@ -58,6 +66,7 @@ dotnet run --project .\src\TropicalStorms.Api\TropicalStorms.Api.csproj --urls h
 ### Local URLs
 
 - JSON API base: `http://127.0.0.1:5085/api/tropical-storms`
+- Website-only API base: `http://127.0.0.1:5085/api/website`
 - SOAP shim WSDL: `http://127.0.0.1:5085/Services/TropicalStorms.asmx?wsdl`
 
 ### Smoke tests
@@ -78,6 +87,8 @@ If you prefer not to set the connection string in the terminal each time:
 `appsettings.Development.json` is ignored by git so local secrets stay local.
 
 If you want local requests to appear in Application Insights too, set `ApplicationInsights__ConnectionString` in that file or export `APPLICATIONINSIGHTS_CONNECTION_STRING` in the terminal before starting the API.
+
+If you want the website lost-registration, contact, or order emails to use ACS locally, add the `TropicalStorms:Website:AcsEmail:*` settings to that same `appsettings.Development.json` file.
 
 ### Debugging
 
@@ -153,9 +164,28 @@ func start
 If you want the simplest step-through loop:
 
 1. Start the API first and verify it can hit SQL.
-2. Start the Function with a short timer schedule.
-3. Use a reduced source list in `src/NHCParser.Function/appsettings.json` if you only want to test one advisory.
-4. Set breakpoints and watch the console output from `func start`.
+2. Start `HurricaneSoftware.Web` if you want to exercise the migrated public website routes or website checkout/contact flows.
+3. Start the Function with a short timer schedule if you are testing parser ingestion too.
+4. Use a reduced source list in `src/NHCParser.Function/appsettings.json` if you only want to test one advisory.
+5. Set breakpoints and watch the console output from the API and `func start`.
+
+## Run the website locally
+
+The website project is:
+
+- `src/HurricaneSoftware.Web`
+
+From the repo root:
+
+```powershell
+dotnet run --project .\src\HurricaneSoftware.Web\HurricaneSoftware.Web.csproj
+```
+
+Important local behavior:
+
+- when the website runs on `localhost`, it defaults its API base URL to `http://127.0.0.1:5085/`
+- if you want a different API host, change `src/HurricaneSoftware.Web/wwwroot/appsettings.json`
+- the API must be running for contact, registration recovery, confirmation, pricing, and checkout calls to work
 
 ## Common problems
 
@@ -182,6 +212,9 @@ NHCParser__CurrentYearOnly=false
 
 - `src/TropicalStorms.Api/Program.cs`
 - `src/TropicalStorms.Api/appsettings.Development.example.json`
+- `src/HurricaneSoftware.Web/Program.cs`
+- `src/HurricaneSoftware.Web/wwwroot/appsettings.json`
+- `src/HurricaneSoftware.Web/wwwroot/staticwebapp.config.json`
 - `src/NHCParser.Function/Program.cs`
 - `src/NHCParser.Function/Functions/NhcParserTimerFunction.cs`
 - `src/NHCParser.Function/appsettings.json`

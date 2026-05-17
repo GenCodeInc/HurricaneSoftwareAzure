@@ -1,0 +1,85 @@
+@page "/contact"
+@page "/ContactUs.aspx"
+@inject WebsiteApiClient Api
+
+<PageTitle>Contact</PageTitle>
+
+<section class="page-section narrow">
+    <p class="eyebrow">Contact</p>
+    <h1>Contact support.</h1>
+    <p class="lede">Please check the FAQ first. If you still need help, send your message here and support will receive it through the live Azure-backed email flow.</p>
+</section>
+
+<section class="form-panel narrow">
+    <EditForm Model="form" OnValidSubmit="SubmitAsync">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-grid two-up">
+            <label class="field">
+                <span>Name</span>
+                <InputText @bind-Value="form.Name" />
+            </label>
+            <label class="field">
+                <span>Operating system</span>
+                <InputSelect @bind-Value="form.OperatingSystem">
+                    <option>Windows</option>
+                    <option>Apple iPhone/iPad iOS</option>
+                    <option>Google Android</option>
+                </InputSelect>
+            </label>
+            <label class="field">
+                <span>Email</span>
+                <InputText @bind-Value="form.Email" />
+            </label>
+            <label class="field">
+                <span>Verify email</span>
+                <InputText @bind-Value="form.ConfirmEmail" />
+            </label>
+            <label class="field">
+                <span>User ID</span>
+                <InputText @bind-Value="form.UserId" />
+            </label>
+            <label class="field">
+                <span>Registration number</span>
+                <InputText @bind-Value="form.RegistrationNumber" />
+            </label>
+        </div>
+
+        <label class="field">
+            <span>Message</span>
+            <InputTextArea @bind-Value="form.Message" rows="7" />
+        </label>
+
+        <button class="button-primary" disabled="@isSubmitting" type="submit">@(isSubmitting ? "Sending..." : "Send message")</button>
+    </EditForm>
+
+    @if (!string.IsNullOrWhiteSpace(statusMessage))
+    {
+        <p class="status @(lastSubmitSucceeded ? "success" : "error")">@statusMessage</p>
+    }
+</section>
+
+@code {
+    private ContactWebsiteRequest form = new();
+    private bool isSubmitting;
+    private bool lastSubmitSucceeded;
+    private string? statusMessage;
+
+    private async Task SubmitAsync()
+    {
+        isSubmitting = true;
+        statusMessage = null;
+
+        var result = await Api.ContactAsync(form);
+        lastSubmitSucceeded = result.Success;
+        statusMessage = result.Success ? result.Value?.Message : result.ErrorMessage;
+
+        if (result.Success)
+        {
+            form = new ContactWebsiteRequest();
+        }
+
+        isSubmitting = false;
+    }
+}

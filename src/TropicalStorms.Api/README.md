@@ -112,11 +112,18 @@ Important settings:
 - `TropicalStorms__LegacySoapShim__Enabled`
 - `TropicalStorms__LegacySoapShim__Path`
 - `TropicalStorms__Email__*`
+- `TropicalStorms__Website__AcsEmail__*`
 
 The app reads `ConnectionStrings:TTE` first, then falls back to `TTE:SqlConnectionString`, then `NHCParser:SqlConnectionString`.
 
 If `APPLICATIONINSIGHTS_CONNECTION_STRING` or `ApplicationInsights:ConnectionString` is present, the API emits standard Application Insights request telemetry with adaptive sampling left on to limit ingestion cost.
 JSON requests show up by request path, and SOAP requests are renamed by SOAP operation so you can tell `StormNames` from `GetCoordinates` instead of seeing one flat ASMX path.
+
+Website email note:
+
+- the legacy SMTP settings under `TropicalStorms__Email__*` are left in place for legacy and parity testing
+- the public website email flows now use `TropicalStorms__Website__AcsEmail__*`
+- the website lost-registration page calls the separate `POST /api/website/registration/recover/acs` route
 
 ## Azure hosting
 

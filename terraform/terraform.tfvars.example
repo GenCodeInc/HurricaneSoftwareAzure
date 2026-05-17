@@ -25,6 +25,8 @@ sqlpackage_path         = null
 exclude_object_types    = ["Users", "Logins", "StoredProcedures"]
 
 deploy_function_app                 = true
+deploy_static_web_app               = true
+deploy_website_acs_email            = true
 function_app_name                   = null
 function_app_name_prefix            = "func-nhcparser-flex"
 function_app_plan_name              = null
@@ -58,3 +60,21 @@ function_private_dns_zone_name              = "privatelink.database.windows.net"
 function_private_dns_zone_vnet_link_name    = "link-nhcparser-sql"
 function_sql_private_endpoint_name          = "pe-sql-gencode-cu66c7"
 function_sql_private_dns_zone_group_name    = "sql-dns-zone-group"
+
+# Separate public website host. Keep this distinct from the API host.
+static_web_app_name                 = null
+static_web_app_name_prefix          = "stapp-hurricanesoftware"
+static_web_app_location             = "eastus2"
+static_web_app_sku_tier             = "Free"
+static_web_app_sku_size             = "Free"
+
+# Website-originated email now uses ACS instead of the legacy SMTP path.
+website_acs_location                        = "global"
+website_acs_data_location                   = "unitedstates"
+website_acs_email_service_name              = null
+website_acs_email_service_name_prefix       = "email-hurricanesoftware"
+website_acs_communication_service_name      = null
+website_acs_communication_service_name_prefix = "acs-hurricanesoftware"
+website_acs_domain_name                     = "AzureManagedDomain"
+website_acs_sender_username                 = "noreply"
+website_acs_sender_display_name             = "Tracking The Eye"

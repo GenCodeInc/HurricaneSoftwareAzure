@@ -381,12 +381,32 @@ public sealed class TropicalStormsRepository(IOptions<TteDataOptions> options) :
     {
         await using var connection = await OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
 
-        var row = await connection.QuerySingleOrDefaultAsync<RegistrationRow>(
-            new CommandDefinition(
-                "dbo.msp_Registration_Get_FromEmail",
-                new { LookupParm = lookup },
-                commandType: CommandType.StoredProcedure,
-                cancellationToken: cancellationToken)).ConfigureAwait(false);
+        RegistrationRow? row;
+        try
+        {
+            row = await connection.QuerySingleOrDefaultAsync<RegistrationRow>(
+                new CommandDefinition(
+                    "dbo.msp_Registration_Get_FromEmail",
+                    new { LookupParm = lookup },
+                    commandType: CommandType.StoredProcedure,
+                    cancellationToken: cancellationToken)).ConfigureAwait(false);
+        }
+        catch (SqlException)
+        {
+            row = await connection.QuerySingleOrDefaultAsync<RegistrationRow>(
+                new CommandDefinition(
+                    "SELECT TOP (1) ID, UserName, RegistrationNumber, Email, QtyOrdered, ReferredBy, DateRegistered, UserID, DateExpire, CellPhoneAlert, EmailAlert FROM dbo.Registrations WHERE Email = @Lookup ORDER BY ID DESC",
+                    new { Lookup = lookup },
+                    cancellationToken: cancellationToken)).ConfigureAwait(false);
+        }
+        catch (InvalidOperationException)
+        {
+            row = await connection.QueryFirstOrDefaultAsync<RegistrationRow>(
+                new CommandDefinition(
+                    "SELECT ID, UserName, RegistrationNumber, Email, QtyOrdered, ReferredBy, DateRegistered, UserID, DateExpire, CellPhoneAlert, EmailAlert FROM dbo.Registrations WHERE Email = @Lookup ORDER BY ID DESC",
+                    new { Lookup = lookup },
+                    cancellationToken: cancellationToken)).ConfigureAwait(false);
+        }
 
         return row is null ? null : MapRegistration(row);
     }
@@ -415,6 +435,29 @@ public sealed class TropicalStormsRepository(IOptions<TteDataOptions> options) :
                 cancellationToken: cancellationToken)).ConfigureAwait(false);
 
         return rows.Select(MapRegistration).ToArray();
+    }
+
+    public async Task CreateRegistrationAsync(RegistrationRecordItem registration, CancellationToken cancellationToken)
+    {
+        await using var connection = await OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+
+        await connection.ExecuteAsync(
+            new CommandDefinition(
+                "INSERT INTO dbo.Registrations (UserName, RegistrationNumber, Email, QtyOrdered, ReferredBy, DateRegistered, UserID, DateExpire, CellPhoneAlert, EmailAlert) VALUES (@UserName, @RegistrationNumber, @Email, @QtyOrdered, @ReferredBy, @DateRegistered, @UserID, @DateExpire, @CellPhoneAlert, @EmailAlert)",
+                new
+                {
+                    registration.UserName,
+                    registration.RegistrationNumber,
+                    registration.Email,
+                    registration.QtyOrdered,
+                    registration.ReferredBy,
+                    registration.DateRegistered,
+                    UserID = registration.UserId,
+                    registration.DateExpire,
+                    registration.CellPhoneAlert,
+                    registration.EmailAlert,
+                },
+                cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
 
     public async Task UpdateRegistrationAsync(RegistrationRecordItem registration, CancellationToken cancellationToken)
@@ -506,6 +549,17 @@ public sealed class TropicalStormsRepository(IOptions<TteDataOptions> options) :
         }
 
         return created;
+    }
+
+    public async Task UpdateAlertConfirmationAsync(int alertId, bool confirmed, CancellationToken cancellationToken)
+    {
+        await using var connection = await OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+
+        await connection.ExecuteAsync(
+            new CommandDefinition(
+                "UPDATE dbo.Alerts SET Confirmed = @Confirmed WHERE AlertID = @AlertID",
+                new { AlertID = alertId, Confirmed = confirmed },
+                cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
 
     public async Task DeleteAlertAsync(int alertId, CancellationToken cancellationToken)
