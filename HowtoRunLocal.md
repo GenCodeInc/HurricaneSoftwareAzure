@@ -31,6 +31,20 @@ From the repo root:
 dotnet build .\NHCParser.Azure.sln
 ```
 
+## Quick script shortcuts
+
+From the repo root:
+
+```powershell
+.\scripts\run-local-api.ps1
+.\scripts\run-local-web.ps1
+.\scripts\run-local-function.ps1
+.\scripts\run-local-website-stack.ps1
+.\scripts\run-local-all.ps1
+```
+
+You can also run the same scripts from the `scripts` folder.
+
 ## Run the API locally
 
 The API project is:
@@ -62,6 +76,12 @@ From the repo root:
 ```powershell
 $env:ConnectionStrings__TTE='Server=tcp:sql-gencode-cu-66c7.database.windows.net,1433;Initial Catalog=TTE;Persist Security Info=False;User ID=<user>;Password=<password>;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
 dotnet run --project .\src\TropicalStorms.Api\TropicalStorms.Api.csproj --urls http://127.0.0.1:5085
+```
+
+Shortcut script:
+
+```powershell
+.\scripts\run-local-api.ps1
 ```
 
 ### Local URLs
@@ -146,6 +166,12 @@ From `src/NHCParser.Function`:
 func start
 ```
 
+Shortcut script:
+
+```powershell
+.\scripts\run-local-function.ps1
+```
+
 ### Debugging
 
 - Open `NHCParser.Azure.sln`
@@ -170,6 +196,18 @@ If you want the simplest step-through loop:
 4. Use a reduced source list in `src/NHCParser.Function/appsettings.json` if you only want to test one advisory.
 5. Set breakpoints and watch the console output from the API and `func start`.
 
+If you want all three in separate windows:
+
+```powershell
+.\scripts\run-local-all.ps1
+```
+
+If you only want the common website stack in separate windows:
+
+```powershell
+.\scripts\run-local-website-stack.ps1
+```
+
 ## Run the website locally
 
 The website project is:
@@ -180,6 +218,12 @@ From the repo root:
 
 ```powershell
 dotnet run --project .\src\HurricaneSoftware.Web\HurricaneSoftware.Web.csproj
+```
+
+Shortcut script:
+
+```powershell
+.\scripts\run-local-web.ps1
 ```
 
 Important local behavior:
