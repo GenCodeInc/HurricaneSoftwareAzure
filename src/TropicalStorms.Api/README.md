@@ -111,7 +111,6 @@ Important settings:
 - `NHCParser__SqlConnectionString`
 - `TropicalStorms__LegacySoapShim__Enabled`
 - `TropicalStorms__LegacySoapShim__Path`
-- `TropicalStorms__Email__*`
 - `TropicalStorms__Website__AcsEmail__*`
 
 The app reads `ConnectionStrings:TTE` first, then falls back to `TTE:SqlConnectionString`, then `NHCParser:SqlConnectionString`.
@@ -121,8 +120,8 @@ JSON requests show up by request path, and SOAP requests are renamed by SOAP ope
 
 Website email note:
 
-- the legacy SMTP settings under `TropicalStorms__Email__*` are left in place for legacy and parity testing
-- the public website email flows now use `TropicalStorms__Website__AcsEmail__*`
+- the old `TropicalStorms__Email__*` SMTP settings have been removed from the supported deployment path
+- the public website and remaining email-capable facade flows now use `TropicalStorms__Website__AcsEmail__*`
 - the website lost-registration page calls the separate `POST /api/website/registration/recover/acs` route
 
 ## Azure hosting

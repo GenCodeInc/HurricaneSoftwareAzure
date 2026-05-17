@@ -12,7 +12,7 @@ namespace TropicalStorms.Api.Services;
 public sealed class TropicalStormsFacade(
     ITropicalStormsRepository repository,
     ITropicalStormsEmailSender emailSender,
-    IOptions<TropicalStormsEmailOptions> emailOptions,
+    IOptions<WebsiteAcsEmailOptions> emailOptions,
     ILogger<TropicalStormsFacade> logger) : ITropicalStormsFacade
 {
     private const int TrackingTheEyeApplicationType = 1;
@@ -89,7 +89,7 @@ public sealed class TropicalStormsFacade(
             var body = $"An alert was requested for {normalizedEmail}.\n\nApplication Type: {appTypeId}\nDevice ID: {normalizedDeviceId}";
             await emailSender.SendAsync(normalizedEmail, subject, body, cancellationToken).ConfigureAwait(false);
 
-            return $"A confirmation email was sent to {normalizedEmail} from {emailOptions.Value.FromAddress}\nonce you confirm the email is valid alerts will be activated.\nif you do not recieve a confirmation email please come back here and verify it was entered correctly.";
+            return $"A confirmation email was sent to {normalizedEmail} from {emailOptions.Value.SenderAddress}\nonce you confirm the email is valid alerts will be activated.\nif you do not recieve a confirmation email please come back here and verify it was entered correctly.";
         }
 
         return alreadyConfirmed

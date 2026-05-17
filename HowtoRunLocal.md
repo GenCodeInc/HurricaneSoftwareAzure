@@ -53,6 +53,7 @@ Optional website ACS email keys for local website email testing:
 - `TropicalStorms__Website__AcsEmail__ConnectionString`
 - `TropicalStorms__Website__AcsEmail__SenderAddress`
 - `TropicalStorms__Website__AcsEmail__SenderDisplayName`
+- `TropicalStorms__Website__AcsEmail__AdminAddress`
 
 ### Quick run
 
@@ -88,7 +89,7 @@ If you prefer not to set the connection string in the terminal each time:
 
 If you want local requests to appear in Application Insights too, set `ApplicationInsights__ConnectionString` in that file or export `APPLICATIONINSIGHTS_CONNECTION_STRING` in the terminal before starting the API.
 
-If you want the website lost-registration, contact, or order emails to use ACS locally, add the `TropicalStorms:Website:AcsEmail:*` settings to that same `appsettings.Development.json` file.
+If you want the website lost-registration, contact, order, and legacy facade email flows to use ACS locally, add the `TropicalStorms:Website:AcsEmail:*` settings to that same `appsettings.Development.json` file.
 
 ### Debugging
 

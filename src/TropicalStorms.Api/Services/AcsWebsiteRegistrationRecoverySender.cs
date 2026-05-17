@@ -9,7 +9,7 @@ namespace TropicalStorms.Api.Services;
 
 public sealed class AcsWebsiteRegistrationRecoverySender(
     IOptions<WebsiteAcsEmailOptions> options,
-    ILogger<AcsWebsiteRegistrationRecoverySender> logger) : IWebsiteRegistrationRecoverySender
+    ILogger<AcsWebsiteRegistrationRecoverySender> logger) : IWebsiteRegistrationRecoverySender, ITropicalStormsEmailSender
 {
     public bool IsEnabled => options.Value.Enabled
         && !string.IsNullOrWhiteSpace(options.Value.ConnectionString)
@@ -65,4 +65,7 @@ public sealed class AcsWebsiteRegistrationRecoverySender(
             toAddress,
             operation.Value.Status);
     }
+
+    Task ITropicalStormsEmailSender.SendAsync(string toAddress, string subject, string body, CancellationToken cancellationToken)
+        => SendAsync(toAddress, subject, body, null, cancellationToken);
 }

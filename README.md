@@ -19,6 +19,8 @@ The new NHC parser migration work now also lives directly in this workspace so y
 - standalone public website front-end: `src/HurricaneSoftware.Web`
 - website-originated email now runs on Azure Communication Services for lost-registration, contact, and order confirmations
 
+The old SMTP attempt is no longer part of the supported deployment path.
+
 Build from the repo root:
 
 ```powershell
@@ -116,6 +118,7 @@ For the public website API host and its ACS email settings, use:
 ```
 
 If your `.env` contains `AZURE_WEBSITE_ACS_COMMUNICATION_SERVICE_NAME` plus `AZURE_WEBSITE_ACS_SENDER_ADDRESS`, the API deployment script will also wire the website ACS settings into the live App Service.
+The same deployment script now deletes the old `TropicalStorms__Email__*` App Service settings so the abandoned SMTP path is removed cleanly.
 
 ## Optional flags
 

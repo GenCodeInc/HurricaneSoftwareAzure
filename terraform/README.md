@@ -161,6 +161,7 @@ ACS email note:
 - Terraform creates the ACS Email Service, Azure-managed domain, sender username, and linked Communication Service
 - use the `website_acs_communication_service_name` and `website_acs_sender_address` outputs when you configure `deploy-tropicalstorms-api.ps1` or the live App Service settings
 - the current live sender address pattern is `noreply@<azure-managed-domain>.azurecomm.net`
+- the repo no longer uses the abandoned `TropicalStorms__Email__*` SMTP settings for the website deployment path
 
 Terraform sets these Function App settings:
 

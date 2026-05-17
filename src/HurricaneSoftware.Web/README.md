@@ -39,6 +39,7 @@ The front-end expects the existing ASP.NET Core API to expose the website-only e
 - `POST /api/website/orders/paypal/capture`
 
 The public website now uses the ACS-backed registration recovery route so website-originated mail is isolated from the legacy SMTP path.
+The SMTP path is no longer part of the supported public website deployment.
 
 By default the WebAssembly app uses:
 

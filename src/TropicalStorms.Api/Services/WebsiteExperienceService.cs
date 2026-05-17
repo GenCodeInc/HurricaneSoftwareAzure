@@ -14,7 +14,7 @@ public sealed class WebsiteExperienceService(
     ITropicalStormsFacade facade,
     IWebsiteRegistrationRecoverySender acsRecoverySender,
     IWebsitePaymentsClient paymentsClient,
-    IOptions<TropicalStormsEmailOptions> emailOptions,
+    IOptions<WebsiteAcsEmailOptions> emailOptions,
     IOptions<WebsitePricingOptions> pricingOptions,
     ILogger<WebsiteExperienceService> logger) : IWebsiteExperienceService
 {

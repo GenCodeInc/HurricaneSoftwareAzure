@@ -9,4 +9,6 @@ public sealed class WebsiteAcsEmailOptions
     public string SenderAddress { get; set; } = string.Empty;
 
     public string SenderDisplayName { get; set; } = "Tracking The Eye";
+
+    public string AdminAddress { get; set; } = string.Empty;
 }

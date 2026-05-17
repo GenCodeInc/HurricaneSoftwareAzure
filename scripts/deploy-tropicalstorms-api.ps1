@@ -399,6 +399,14 @@ if ([string]::IsNullOrWhiteSpace($websiteAcsSenderDisplayName)) {
     $websiteAcsSenderDisplayName = "Tracking The Eye"
 }
 
+$websiteAcsAdminAddress = [Environment]::GetEnvironmentVariable("AZURE_WEBSITE_ACS_ADMIN_ADDRESS")
+if ([string]::IsNullOrWhiteSpace($websiteAcsAdminAddress)) {
+    $websiteAcsAdminAddress = [Environment]::GetEnvironmentVariable("TROPICALSTORMS_WEBSITE_ACS_ADMIN_ADDRESS")
+}
+if ([string]::IsNullOrWhiteSpace($websiteAcsAdminAddress)) {
+    $websiteAcsAdminAddress = "www@gencode.com"
+}
+
 if ([string]::IsNullOrWhiteSpace($websiteAcsConnectionString) -and -not [string]::IsNullOrWhiteSpace($websiteAcsCommunicationServiceName)) {
     $communicationExtension = Try-Invoke-AzJson -Arguments @("extension", "show", "--name", "communication", "-o", "json")
     if (-not $communicationExtension) {
@@ -476,8 +484,7 @@ $appSettings = @(
     "ConnectionStrings__TTE=$sqlConnectionString",
     "NHCParser__SqlConnectionString=$sqlConnectionString",
     "TropicalStorms__LegacySoapShim__Enabled=$(((-not $DisableLegacyShim)).ToString().ToLowerInvariant())",
-    "TropicalStorms__LegacySoapShim__Path=/Services/TropicalStorms.asmx",
-    "TropicalStorms__Email__Enabled=false"
+    "TropicalStorms__LegacySoapShim__Path=/Services/TropicalStorms.asmx"
 )
 
 if (-not [string]::IsNullOrWhiteSpace($websiteAcsConnectionString) -and -not [string]::IsNullOrWhiteSpace($websiteAcsSenderAddress)) {
@@ -485,7 +492,8 @@ if (-not [string]::IsNullOrWhiteSpace($websiteAcsConnectionString) -and -not [st
         "TropicalStorms__Website__AcsEmail__Enabled=true",
         "TropicalStorms__Website__AcsEmail__ConnectionString=$websiteAcsConnectionString",
         "TropicalStorms__Website__AcsEmail__SenderAddress=$websiteAcsSenderAddress",
-        "TropicalStorms__Website__AcsEmail__SenderDisplayName=$websiteAcsSenderDisplayName"
+        "TropicalStorms__Website__AcsEmail__SenderDisplayName=$websiteAcsSenderDisplayName",
+        "TropicalStorms__Website__AcsEmail__AdminAddress=$websiteAcsAdminAddress"
     )
 }
 
@@ -499,6 +507,23 @@ Invoke-AzQuiet -Arguments @(
     "--name", $WebAppName,
     "--settings"
 ) + $appSettings | Out-Null
+
+Write-Step "Removing legacy SMTP application settings"
+Invoke-AzQuiet -Arguments @(
+    "webapp", "config", "appsettings", "delete",
+    "--resource-group", $ResourceGroup,
+    "--name", $WebAppName,
+    "--setting-names",
+    "TropicalStorms__Email__Enabled",
+    "TropicalStorms__Email__Host",
+    "TropicalStorms__Email__Port",
+    "TropicalStorms__Email__UseSsl",
+    "TropicalStorms__Email__UserName",
+    "TropicalStorms__Email__Password",
+    "TropicalStorms__Email__FromAddress",
+    "TropicalStorms__Email__FromName",
+    "TropicalStorms__Email__AdminAddress"
+) | Out-Null
 
 Write-Step "Allowing app-level HTTPS redirects"
 Invoke-AzQuiet -Arguments @("webapp", "update", "--resource-group", $ResourceGroup, "--name", $WebAppName, "--set", "httpsOnly=false")

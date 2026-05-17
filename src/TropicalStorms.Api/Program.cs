@@ -47,25 +47,21 @@ builder.Services.Configure<TteDataOptions>(options =>
 		?? builder.Configuration["NHCParser:SqlConnectionString"];
 });
 builder.Services.Configure<LegacySoapOptions>(builder.Configuration.GetSection("TropicalStorms:LegacySoapShim"));
-builder.Services.Configure<TropicalStormsEmailOptions>(builder.Configuration.GetSection("TropicalStorms:Email"));
 builder.Services.Configure<WebsiteAcsEmailOptions>(builder.Configuration.GetSection("TropicalStorms:Website:AcsEmail"));
-builder.Services.PostConfigure<TropicalStormsEmailOptions>(options =>
+builder.Services.PostConfigure<WebsiteAcsEmailOptions>(options =>
 {
-	options.Enabled = GetBooleanConfigurationValue(builder.Configuration, options.Enabled, "TropicalStorms:Email:Enabled", "TropicalStorms__Email__Enabled");
-	options.Host = GetConfigurationValue(builder.Configuration, options.Host, "TropicalStorms:Email:Host", "TropicalStorms__Email__Host");
-	options.Port = GetIntegerConfigurationValue(builder.Configuration, options.Port, "TropicalStorms:Email:Port", "TropicalStorms__Email__Port");
-	options.UseSsl = GetBooleanConfigurationValue(builder.Configuration, options.UseSsl, "TropicalStorms:Email:UseSsl", "TropicalStorms__Email__UseSsl");
-	options.UserName = GetConfigurationValue(builder.Configuration, options.UserName, "TropicalStorms:Email:UserName", "TropicalStorms__Email__UserName");
-	options.Password = GetConfigurationValue(builder.Configuration, options.Password, "TropicalStorms:Email:Password", "TropicalStorms__Email__Password");
-	options.FromAddress = GetConfigurationValue(builder.Configuration, options.FromAddress, "TropicalStorms:Email:FromAddress", "TropicalStorms__Email__FromAddress");
-	options.FromName = GetConfigurationValue(builder.Configuration, options.FromName, "TropicalStorms:Email:FromName", "TropicalStorms__Email__FromName");
-	options.AdminAddress = GetConfigurationValue(builder.Configuration, options.AdminAddress, "TropicalStorms:Email:AdminAddress", "TropicalStorms__Email__AdminAddress");
+	options.Enabled = GetBooleanConfigurationValue(builder.Configuration, options.Enabled, "TropicalStorms:Website:AcsEmail:Enabled", "TropicalStorms__Website__AcsEmail__Enabled");
+	options.ConnectionString = GetConfigurationValue(builder.Configuration, options.ConnectionString, "TropicalStorms:Website:AcsEmail:ConnectionString", "TropicalStorms__Website__AcsEmail__ConnectionString");
+	options.SenderAddress = GetConfigurationValue(builder.Configuration, options.SenderAddress, "TropicalStorms:Website:AcsEmail:SenderAddress", "TropicalStorms__Website__AcsEmail__SenderAddress");
+	options.SenderDisplayName = GetConfigurationValue(builder.Configuration, options.SenderDisplayName, "TropicalStorms:Website:AcsEmail:SenderDisplayName", "TropicalStorms__Website__AcsEmail__SenderDisplayName");
+	options.AdminAddress = GetConfigurationValue(builder.Configuration, options.AdminAddress, "TropicalStorms:Website:AcsEmail:AdminAddress", "TropicalStorms__Website__AcsEmail__AdminAddress");
 });
 builder.Services.Configure<WebsitePricingOptions>(builder.Configuration.GetSection("TropicalStorms:Website:Pricing"));
 builder.Services.Configure<WebsitePayPalOptions>(builder.Configuration.GetSection("TropicalStorms:Website:PayPal"));
 builder.Services.AddScoped<ITropicalStormsRepository, TropicalStormsRepository>();
-builder.Services.AddScoped<ITropicalStormsEmailSender, SmtpTropicalStormsEmailSender>();
-builder.Services.AddScoped<IWebsiteRegistrationRecoverySender, AcsWebsiteRegistrationRecoverySender>();
+builder.Services.AddScoped<AcsWebsiteRegistrationRecoverySender>();
+builder.Services.AddScoped<ITropicalStormsEmailSender>(static provider => provider.GetRequiredService<AcsWebsiteRegistrationRecoverySender>());
+builder.Services.AddScoped<IWebsiteRegistrationRecoverySender>(static provider => provider.GetRequiredService<AcsWebsiteRegistrationRecoverySender>());
 builder.Services.AddScoped<ITropicalStormsFacade, TropicalStormsFacade>();
 builder.Services.AddHttpClient<IWebsitePaymentsClient, PayPalWebsitePaymentsClient>();
 builder.Services.AddScoped<IWebsiteExperienceService, WebsiteExperienceService>();
@@ -145,19 +141,6 @@ static bool GetBooleanConfigurationValue(IConfiguration configuration, bool curr
 	foreach (var key in keys)
 	{
 		if (bool.TryParse(configuration[key], out var parsedValue))
-		{
-			return parsedValue;
-		}
-	}
-
-	return currentValue;
-}
-
-static int GetIntegerConfigurationValue(IConfiguration configuration, int currentValue, params string[] keys)
-{
-	foreach (var key in keys)
-	{
-		if (int.TryParse(configuration[key], out var parsedValue))
 		{
 			return parsedValue;
 		}
