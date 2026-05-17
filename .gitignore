@@ -29,6 +29,7 @@ TestResults/
 .vs/
 .vscode/*.user
 .publish/
+scripts/tempzip/
 .scratch/
 .tmp/
 .azurite/

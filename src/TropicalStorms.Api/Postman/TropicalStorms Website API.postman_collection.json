@@ -1,0 +1,184 @@
+{
+  "info": {
+    "name": "TropicalStorms Website API",
+    "_postman_id": "3c58e9a7-7f07-43b7-8708-3d831284b89d",
+    "description": "Website endpoint checks for registration recovery, contact, and quote flows with editable collection variables.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://webservice.hurricanesoftware.com"
+    },
+    {
+      "key": "testEmail",
+      "value": "escott@gencode.com"
+    },
+    {
+      "key": "confirmEmail",
+      "value": "escott@gencode.com"
+    },
+    {
+      "key": "contactName",
+      "value": "Eric Scott"
+    },
+    {
+      "key": "contactMessage",
+      "value": "This is a Postman website contact test."
+    },
+    {
+      "key": "confirmId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Website Registration Recovery (ACS)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+              "const body = pm.response.json();",
+              "pm.test('response contains message', function () { pm.expect(body.message).to.be.a('string').and.to.have.length.above(0); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{testEmail}}\"\n}"
+        },
+        "url": "{{baseUrl}}/api/website/registration/recover/acs"
+      }
+    },
+    {
+      "name": "Website Registration Recovery (Legacy Route)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+              "const body = pm.response.json();",
+              "pm.test('response contains message', function () { pm.expect(body.message).to.be.a('string').and.to.have.length.above(0); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{testEmail}}\"\n}"
+        },
+        "url": "{{baseUrl}}/api/website/registration/recover"
+      }
+    },
+    {
+      "name": "Website Contact Us",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+              "const body = pm.response.json();",
+              "pm.test('message confirms send', function () { pm.expect(body.message).to.include('sent'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"{{contactName}}\",\n  \"email\": \"{{testEmail}}\",\n  \"confirmEmail\": \"{{confirmEmail}}\",\n  \"operatingSystem\": \"Windows 11\",\n  \"message\": \"{{contactMessage}}\",\n  \"userId\": \"demo-user\",\n  \"registrationNumber\": \"demo-reg\"\n}"
+        },
+        "url": "{{baseUrl}}/api/website/contact"
+      }
+    },
+    {
+      "name": "Website Quote",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+              "const body = pm.response.json();",
+              "pm.test('quote has amount', function () { pm.expect(body.amount).to.be.a('number'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"isRenewal\": false,\n  \"renewalEmail\": null,\n  \"isCorporate\": false,\n  \"termYears\": 1,\n  \"includeFlashDrive\": false,\n  \"seatCount\": null,\n  \"promoCode\": null\n}"
+        },
+        "url": "{{baseUrl}}/api/website/orders/quote"
+      }
+    },
+    {
+      "name": "Website Confirm Alert",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('status is 200 or 400 or 503', function () { pm.expect([200, 400, 503]).to.include(pm.response.code); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"confirmId\": {{confirmId}}\n}"
+        },
+        "url": "{{baseUrl}}/api/website/alerts/confirm"
+      }
+    }
+  ]
+}

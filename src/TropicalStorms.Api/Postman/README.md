@@ -1,12 +1,13 @@
 # TropicalStorms Postman Package
 
-This folder now contains three import-ready Postman collections with fixed URLs and prefilled sample data.
+This folder now contains four import-ready Postman collections with fixed URLs or simple collection variables and prefilled sample data.
 
 Import these collections:
 
 - `TropicalStorms Local - API and SOAP.postman_collection.json`
 - `TropicalStormsAzure.postman_collection.json`
 - `TropicalStorms Azure Linux - API and SOAP.postman_collection.json`
+- `TropicalStorms Website API.postman_collection.json`
 
 Why it is structured this way:
 
@@ -29,6 +30,9 @@ Included coverage:
 - `GetStormNames`
 - `GetStormsDataset`
 - `ImageLinks` with `GoesVisFull`
+- website registration recovery
+- website contact form
+- website order quote
 
 Prefilled sample data:
 
@@ -50,3 +54,4 @@ Notes:
 - The local collection expects the app at `http://127.0.0.1:5085`.
 - `TropicalStormsAzure` targets `https://webservice.hurricanesoftware.com`.
 - The Linux Azure collection targets `https://api-tropicalstorms-linux-cu66c7.azurewebsites.net`.
+- The website API collection defaults `baseUrl` to `https://webservice.hurricanesoftware.com` and lets you override the email and other sample values at the collection level.
