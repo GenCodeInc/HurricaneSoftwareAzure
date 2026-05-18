@@ -6,7 +6,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build solution",
-      "program": "${workspaceFolder}/src/TropicalStorms.Api/bin/Debug/net8.0/TropicalStorms.Api.dll",
+      "program": "${workspaceFolder}/src/TropicalStorms.Api/bin/Debug/net10.0/TropicalStorms.Api.dll",
       "args": [
         "--urls",
         "http://127.0.0.1:5085"

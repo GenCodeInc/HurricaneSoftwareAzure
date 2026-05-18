@@ -8,7 +8,7 @@ param(
     [string]$WebAppName = "<api app name>",
     [ValidateSet("Windows", "Linux")]
     [string]$PlanOs = "Linux",
-    [string]$RuntimeStack = "DOTNETCORE:8.0",
+    [string]$RuntimeStack = "DOTNETCORE:10.0",
     [string]$VnetName = "<api vnet name>",
     [string]$IntegrationSubnetName = "<api integration subnet name>",
     [string]$IntegrationSubnetAddressPrefix = "10.20.0.96/27",

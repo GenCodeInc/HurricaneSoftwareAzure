@@ -56,7 +56,7 @@ function Invoke-Process {
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $workspaceRoot = Split-Path -Parent $scriptRoot
 $project = if ([System.IO.Path]::IsPathRooted($ProjectPath)) { $ProjectPath } else { Join-Path $workspaceRoot $ProjectPath }
-$publishDirectory = Join-Path $workspaceRoot "src\HurricaneSoftware.Web\bin\Release\net8.0\publish\wwwroot"
+$publishDirectory = Join-Path $workspaceRoot "src\HurricaneSoftware.Web\bin\Release\net10.0\publish\wwwroot"
 
 Write-Step "Building website publish output"
 Require-Command -Name "dotnet"

@@ -69,6 +69,11 @@ try {
     Write-Step "Deploying Function App package"
     Require-Command -Name "az"
 
+    & az resource update --resource-group $ResourceGroup --resource-type Microsoft.Web/sites --name $FunctionAppName --api-version 2024-04-01 --set properties.functionAppConfig.runtime.version=10.0 --only-show-errors | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        throw "Function runtime update failed."
+    }
+
     & az functionapp deployment source config-zip --resource-group $ResourceGroup --name $FunctionAppName --src $zipPath -o none
     if ($LASTEXITCODE -ne 0) {
         throw "Function deploy failed."

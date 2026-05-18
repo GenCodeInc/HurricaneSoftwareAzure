@@ -24,6 +24,8 @@ function Require-Command {
     }
 }
 
+$linuxFxVersion = '"DOTNETCORE|10.0"'
+
 $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $workspaceRoot = Split-Path -Parent $scriptRoot
 $project = if ([System.IO.Path]::IsPathRooted($ProjectPath)) { $ProjectPath } else { Join-Path $workspaceRoot $ProjectPath }
@@ -69,6 +71,11 @@ try {
 
     Write-Step "Deploying API to Azure App Service"
     Require-Command -Name "az"
+
+    & az webapp config set --resource-group $ResourceGroup --name $WebAppName --linux-fx-version $linuxFxVersion --only-show-errors | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        throw "API runtime update failed."
+    }
 
     & az webapp deploy --resource-group $ResourceGroup --name $WebAppName --src-path $zipPath --type zip --async false
     if ($LASTEXITCODE -ne 0) {
