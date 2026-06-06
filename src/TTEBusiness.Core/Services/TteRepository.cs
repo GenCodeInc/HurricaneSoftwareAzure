@@ -94,31 +94,16 @@ public sealed class TteRepository(IOptions<NHCParserOptions> options) : ITteRepo
 
         if (storm is null)
         {
-            var insertedStorm = await connection.QuerySingleAsync<InsertedStormRow>(
-                new CommandDefinition(
-                    "dbo.msp_Storm_Ins",
-                    new
-                    {
-                        Name = request.StormName,
-                        Year = request.Year,
-                        RegionType = request.RegionType,
-                        StormType = request.StormType,
-                        Active = true,
-                        StormNumber = request.StormNumber,
-                    },
-                    transaction: transaction,
-                    commandType: CommandType.StoredProcedure,
-                    cancellationToken: cancellationToken)).ConfigureAwait(false);
-
-            storm = new StormRow
-            {
-                StormID = insertedStorm.StormID,
-                Name = request.StormName,
-                Active = true,
-                StormNumber = request.StormNumber,
-                EmailAlertsSent = true,
-                StormType = request.StormType,
-            };
+            storm = await InsertStormAsync(
+                connection,
+                transaction,
+                request.StormName,
+                request.Year,
+                request.RegionType,
+                request.StormType,
+                active: true,
+                request.StormNumber,
+                cancellationToken).ConfigureAwait(false);
 
             stormCreated = true;
         }
@@ -308,31 +293,16 @@ public sealed class TteRepository(IOptions<NHCParserOptions> options) : ITteRepo
 
         if (forecastStorm is null)
         {
-            var insertedStorm = await connection.QuerySingleAsync<InsertedStormRow>(
-                new CommandDefinition(
-                    "dbo.msp_Storm_Ins",
-                    new
-                    {
-                        Name = forecastStormName,
-                        Year = request.Year,
-                        RegionType = request.RegionType,
-                        StormType = 0,
-                        Active = true,
-                        StormNumber = request.StormNumber,
-                    },
-                    transaction: transaction,
-                    commandType: CommandType.StoredProcedure,
-                    cancellationToken: cancellationToken)).ConfigureAwait(false);
-
-            forecastStorm = new StormRow
-            {
-                StormID = insertedStorm.StormID,
-                Name = forecastStormName,
-                Active = true,
-                StormNumber = request.StormNumber,
-                EmailAlertsSent = true,
-                StormType = 0,
-            };
+            forecastStorm = await InsertStormAsync(
+                connection,
+                transaction,
+                forecastStormName,
+                request.Year,
+                request.RegionType,
+                stormType: 0,
+                active: true,
+                request.StormNumber,
+                cancellationToken).ConfigureAwait(false);
         }
         else if (!string.Equals(forecastStorm.Name, forecastStormName, StringComparison.OrdinalIgnoreCase))
         {
@@ -559,11 +529,51 @@ WHERE s.StormType = 0
         return true;
     }
 
+    private static async Task<StormRow> InsertStormAsync(
+        DbConnection connection,
+        DbTransaction transaction,
+        string name,
+        int year,
+        int regionType,
+        int stormType,
+        bool active,
+        int stormNumber,
+        CancellationToken cancellationToken)
+    {
+        var insertedStorms = (await connection.QueryAsync<StormRow>(
+            new CommandDefinition(
+                "dbo.msp_Storm_Ins",
+                new
+                {
+                    Name = name,
+                    Year = year,
+                    RegionType = regionType,
+                    StormType = stormType,
+                    Active = active,
+                    StormNumber = stormNumber,
+                },
+                transaction: transaction,
+                commandType: CommandType.StoredProcedure,
+                cancellationToken: cancellationToken)).ConfigureAwait(false)).ToList();
+
+        return insertedStorms.LastOrDefault(row =>
+                row.Year == year
+                && row.RegionType == regionType
+                && row.StormType == stormType
+                && row.StormNumber == stormNumber
+                && string.Equals(row.Name, name, StringComparison.OrdinalIgnoreCase))
+            ?? throw new InvalidOperationException($"Could not reload inserted storm '{name}' for year {year}, region {regionType}, storm number {stormNumber}, storm type {stormType}.");
+    }
+
     private sealed record StormRow
     {
         public int StormID { get; init; }
 
         public string Name { get; init; } = string.Empty;
+
+        public int Year { get; init; }
+
+        public int RegionType { get; init; }
 
         public bool Active { get; init; }
 
@@ -572,11 +582,6 @@ WHERE s.StormType = 0
         public bool EmailAlertsSent { get; init; }
 
         public int StormType { get; init; }
-    }
-
-    private sealed record InsertedStormRow
-    {
-        public int StormID { get; init; }
     }
 
     private sealed record CoordinateRow
