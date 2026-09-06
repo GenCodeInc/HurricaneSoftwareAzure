@@ -66,10 +66,16 @@ try {
         return
     }
 
-    Write-Step "Deploying Function App package"
     Require-Command -Name "az"
 
-    & az resource update --resource-group $ResourceGroup --resource-type Microsoft.Web/sites --name $FunctionAppName --api-version 2024-04-01 --set properties.functionAppConfig.runtime.version=10.0 --only-show-errors | Out-Null
+    Write-Step "Checking Azure CLI authentication"
+    & az account get-access-token --resource https://management.azure.com/ --query expiresOn -o none --only-show-errors
+    if ($LASTEXITCODE -ne 0) {
+        throw "Azure CLI authentication failed. Run 'az login --tenant 37458170-348e-4ecf-a2d2-a050645a9c5c' and retry."
+    }
+
+    Write-Step "Deploying Function App package"
+    & az resource update --resource-group $ResourceGroup --resource-type Microsoft.Web/sites --name $FunctionAppName --api-version 2024-04-01 --set properties.functionAppConfig.runtime.version=10.0 --only-show-errors -o none
     if ($LASTEXITCODE -ne 0) {
         throw "Function runtime update failed."
     }
