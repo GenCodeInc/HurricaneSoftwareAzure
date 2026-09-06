@@ -4,6 +4,8 @@ public sealed class PersistAdvisoryRequest
 {
     public required string StormName { get; init; }
 
+    public required string StormIdentifier { get; init; }
+
     public required int StormNumber { get; init; }
 
     public required string AdvisoryNumber { get; init; }

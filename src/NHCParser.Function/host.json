@@ -13,7 +13,9 @@
       "Function": "Warning",
       "Host.Results": "Warning",
       "Host.Aggregator": "Warning",
-      "Host.Startup": "Information"
+      "Host.Startup": "Information",
+      "NHCParser.Function.Functions.NhcParserTimerFunction": "Information",
+      "NHCParser.Function.Services.NhcParserStartupService": "Information"
     }
   }
 }

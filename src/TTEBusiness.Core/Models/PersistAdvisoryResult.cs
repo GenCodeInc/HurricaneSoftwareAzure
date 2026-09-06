@@ -15,4 +15,6 @@ public sealed class PersistAdvisoryResult
     public bool CoordinateInserted { get; init; }
 
     public int AdvisoryRowsUpdated { get; init; }
+
+    public string StormCenterItemAction { get; init; } = "Unchanged";
 }

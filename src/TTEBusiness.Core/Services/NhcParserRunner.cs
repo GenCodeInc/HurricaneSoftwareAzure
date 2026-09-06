@@ -101,6 +101,22 @@ public sealed class NhcParserRunner(
         {
             logger.LogError(ex, "Failed to deactivate expired forecast storms.");
         }
+
+        if (parserOptions.SyncStormCenterItems)
+        {
+            try
+            {
+                var removedStormCenterItems = await tteRepository.RemoveInactiveStormCenterItemsAsync(cancellationToken).ConfigureAwait(false);
+                if (removedStormCenterItems > 0)
+                {
+                    logger.LogInformation("Removed {Count} inactive storm-center mobile items.", removedStormCenterItems);
+                }
+            }
+            catch (Exception ex) when (!cancellationToken.IsCancellationRequested)
+            {
+                logger.LogError(ex, "Failed to remove inactive storm-center mobile items.");
+            }
+        }
         }
         finally
         {

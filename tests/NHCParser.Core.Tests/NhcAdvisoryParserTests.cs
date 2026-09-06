@@ -43,7 +43,9 @@ public sealed class NhcAdvisoryParserTests
         Assert.Equal(NhcAdvisoryKind.Normal, advisory.Kind);
         Assert.Equal(NhcRegion.EasternPacific, advisory.Region);
         Assert.Equal("Octave", advisory.StormName);
+        Assert.Equal("EP152025", advisory.StormIdentifier);
         Assert.Equal(15, advisory.StormNumber);
+        Assert.Equal(2025, advisory.StormYear);
         Assert.Equal("38", advisory.AdvisoryNumber);
         Assert.Equal(new DateTimeOffset(2025, 10, 9, 15, 0, 0, TimeSpan.Zero), advisory.IssuedAtUtc);
         Assert.True(advisory.IsFinalAdvisory);
@@ -101,7 +103,9 @@ public sealed class NhcAdvisoryParserTests
         Assert.Equal(NhcAdvisoryKind.Intermediate, advisory.Kind);
         Assert.Equal(NhcRegion.Atlantic, advisory.Region);
         Assert.Equal("Karen", advisory.StormName);
+        Assert.Equal("AL112025", advisory.StormIdentifier);
         Assert.Equal(11, advisory.StormNumber);
+        Assert.Equal(2025, advisory.StormYear);
         Assert.Equal("4", advisory.AdvisoryNumber);
         Assert.Equal(new DateTimeOffset(2025, 10, 10, 21, 0, 0, TimeSpan.Zero), advisory.IssuedAtUtc);
         Assert.True(advisory.IsFinalAdvisory);
@@ -118,6 +122,34 @@ public sealed class NhcAdvisoryParserTests
         Assert.Equal(14, advisory.Current.MovementSpeedKts);
         Assert.Equal(ParsedStormType.TropicalStorm, advisory.Current.StormType);
         Assert.Empty(advisory.ForecastPoints);
+    }
+
+    [Fact]
+    public void Parse_CentralPacificCrossover_PreservesEasternPacificIdentifier()
+    {
+        var advisory = parser.Parse(
+            """
+            WTPA24 PHFO 010850
+            TCMCP4
+
+            HURRICANE LOWELL FORECAST/ADVISORY NUMBER 41
+            NWS CENTRAL PACIFIC HURRICANE CENTER HONOLULU HI   EP122026
+            ISSUED BY NWS NATIONAL HURRICANE CENTER MIAMI FL
+            1100 PM HST THU DEC 31 2026
+
+            HURRICANE CENTER LOCATED NEAR 14.1N 163.5W AT 01/0900Z
+            PRESENT MOVEMENT TOWARD THE NORTHWEST OR 315 DEGREES AT 5 KT
+            ESTIMATED MINIMUM CENTRAL PRESSURE 947 MB
+            MAX SUSTAINED WINDS 110 KT WITH GUSTS TO 135 KT.
+            """,
+            ["Lowell"]);
+
+        Assert.Equal(NhcRegion.CentralPacific, advisory.Region);
+        Assert.Equal("Lowell", advisory.StormName);
+        Assert.Equal("EP122026", advisory.StormIdentifier);
+        Assert.Equal(12, advisory.StormNumber);
+        Assert.Equal(2026, advisory.StormYear);
+        Assert.Equal(2027, advisory.IssuedAtUtc.Year);
     }
 
     [Fact]

@@ -14,5 +14,7 @@ public interface ITteRepository
 
     Task<int> DeactivateExpiredForecastsAsync(CancellationToken cancellationToken);
 
+    Task<int> RemoveInactiveStormCenterItemsAsync(CancellationToken cancellationToken);
+
     Task<int> ReplacePointsOfInterestAsync(IReadOnlyList<PersistPointOfInterestRequest> requests, CancellationToken cancellationToken);
 }

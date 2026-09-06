@@ -138,13 +138,35 @@ internal static partial class NhcParserText
 
     public static int ParseStormNumber(string content)
     {
-        var match = StormNumberRegex().Match(CollapseWhitespace(content));
+        var match = StormIdentifierRegex().Match(CollapseWhitespace(content));
         if (!match.Success)
         {
             throw new InvalidOperationException("Could not parse storm number.");
         }
 
         return int.Parse(match.Groups["stormNumber"].Value, CultureInfo.InvariantCulture);
+    }
+
+    public static string ParseStormIdentifier(string content)
+    {
+        var match = StormIdentifierRegex().Match(CollapseWhitespace(content));
+        if (!match.Success)
+        {
+            throw new InvalidOperationException("Could not parse storm identifier.");
+        }
+
+        return match.Value.ToUpperInvariant();
+    }
+
+    public static int ParseStormYear(string content)
+    {
+        var match = StormIdentifierRegex().Match(CollapseWhitespace(content));
+        if (!match.Success)
+        {
+            throw new InvalidOperationException("Could not parse storm year.");
+        }
+
+        return int.Parse(match.Groups["stormYear"].Value, CultureInfo.InvariantCulture);
     }
 
     public static string ParseAdvisoryNumber(string content)
@@ -434,8 +456,8 @@ internal static partial class NhcParserText
     [GeneratedRegex(@"\b(?<time>\d{4})\s+(?<tz>GMT|UTC|ADT|AST|EDT|EST|CDT|CST|PDT|PST|HDT|HST)\s+\w{3}\s+(?<month>[A-Z]{3})\s+(?<day>\d{1,2})\s+(?<year>\d{4})\b", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
     private static partial Regex TwentyFourHourDateRegex();
 
-    [GeneratedRegex(@"\b(?:AL|EP|CP)(?<stormNumber>\d{2})\d{4}\b", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
-    private static partial Regex StormNumberRegex();
+    [GeneratedRegex(@"\b(?:AL|EP|CP)(?<stormNumber>\d{2})(?<stormYear>\d{4})\b", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+    private static partial Regex StormIdentifierRegex();
 
     [GeneratedRegex(@"ADVISORY\s+NUMBER\s+(?<advisoryNumber>[0-9A-Z.]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
     private static partial Regex AdvisoryNumberRegex();

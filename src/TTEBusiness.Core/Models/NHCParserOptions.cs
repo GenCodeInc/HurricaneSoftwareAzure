@@ -10,6 +10,10 @@ public sealed class NHCParserOptions
 
     public bool CurrentYearOnly { get; set; } = true;
 
+    public bool RunOnStartup { get; set; }
+
+    public bool SyncStormCenterItems { get; set; }
+
     public bool ProbeDatabaseOnStartup { get; set; }
 
     public int DatabaseProbeMaxUrlsToLog { get; set; } = 5;

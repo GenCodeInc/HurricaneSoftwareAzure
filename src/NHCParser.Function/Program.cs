@@ -28,6 +28,7 @@ var host = new HostBuilder()
         services.AddSingleton<INhcAdvisoryProcessor, PersistingParsedAdvisoryProcessor>();
         services.AddSingleton<INhcParserRunner, NhcParserRunner>();
         services.AddSingleton<ITteRepository, TteRepository>();
+        services.AddHostedService<NhcParserStartupService>();
         services.AddHttpClient<INhcAdvisoryClient, NhcAdvisoryClient>((serviceProvider, client) =>
         {
             var options = serviceProvider.GetRequiredService<Microsoft.Extensions.Options.IOptions<NHCParserOptions>>().Value;

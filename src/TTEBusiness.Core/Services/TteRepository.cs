@@ -12,6 +12,7 @@ public sealed class TteRepository(IOptions<NHCParserOptions> options) : ITteRepo
 {
     private static readonly TimeSpan FinalAdvisoryActiveWindow = TimeSpan.FromHours(24);
     private static readonly TimeSpan ForecastCoordinateActiveWindow = TimeSpan.FromHours(12);
+    private const string StormCenterImageBaseUrl = "https://cdn.star.nesdis.noaa.gov/FLOATER";
 
     public async Task<IReadOnlyList<AdvisoryRecord>> GetAdvisoriesAsync(int regionType, CancellationToken cancellationToken)
     {
@@ -239,6 +240,19 @@ public sealed class TteRepository(IOptions<NHCParserOptions> options) : ITteRepo
             stormUpdated,
             cancellationToken).ConfigureAwait(false);
 
+        var stormCenterItemAction = "Disabled";
+        if (options.Value.SyncStormCenterItems)
+        {
+            stormCenterItemAction = await SyncStormCenterItemAsync(
+                connection,
+                transaction,
+                request.StormName,
+                request.StormIdentifier,
+                request.RegionType,
+                desiredActive,
+                cancellationToken).ConfigureAwait(false);
+        }
+
         await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
 
         return new PersistAdvisoryResult
@@ -249,6 +263,7 @@ public sealed class TteRepository(IOptions<NHCParserOptions> options) : ITteRepo
             StormUpdated = stormUpdated,
             CoordinateInserted = coordinateInserted,
             AdvisoryRowsUpdated = advisoryRowsUpdated,
+            StormCenterItemAction = stormCenterItemAction,
         };
     }
 
@@ -443,6 +458,68 @@ WHERE s.StormType = 0
                 cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
 
+    public async Task<int> RemoveInactiveStormCenterItemsAsync(CancellationToken cancellationToken)
+    {
+        var connectionString = options.Value.SqlConnectionString;
+        if (string.IsNullOrWhiteSpace(connectionString))
+        {
+            throw new InvalidOperationException("NHCParser:SqlConnectionString is not configured.");
+        }
+
+        await using var connection = new SqlConnection(connectionString);
+        await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
+        await using var transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+
+        var activeStorms = (await connection.QueryAsync<ActiveStormIdentityRow>(
+            new CommandDefinition(
+                @"
+SELECT StormNumber, [Year], RegionType
+FROM dbo.Storm
+WHERE Active = 1
+  AND StormType <> 0;",
+                transaction: transaction,
+                cancellationToken: cancellationToken)).ConfigureAwait(false)).ToList();
+
+        var activeIdentifiers = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var storm in activeStorms)
+        {
+            if (storm.RegionType == 1)
+            {
+                activeIdentifiers.Add($"AL{storm.StormNumber:D2}{storm.Year:D4}");
+            }
+            else if (storm.RegionType == 2)
+            {
+                activeIdentifiers.Add($"EP{storm.StormNumber:D2}{storm.Year:D4}");
+                activeIdentifiers.Add($"CP{storm.StormNumber:D2}{storm.Year:D4}");
+            }
+        }
+
+        var stormCenterItems = (await connection.QueryAsync<MobileTabItemRow>(
+            new CommandDefinition(
+                @"
+SELECT MobileTabItemsID, MobileTabGroupID, URL, Text, ItemType
+FROM dbo.MobileTabItems
+WHERE MobileTabGroupID IN (1, 2)
+  AND URL LIKE @UrlPrefix;",
+                new { UrlPrefix = $"{StormCenterImageBaseUrl}/%" },
+                transaction: transaction,
+                cancellationToken: cancellationToken)).ConfigureAwait(false)).ToList();
+
+        var inactiveItems = stormCenterItems
+            .Select(item => new { Item = item, Identifier = TryGetStormIdentifierFromUrl(item.URL) })
+            .Where(item => item.Identifier is not null && !activeIdentifiers.Contains(item.Identifier))
+            .Select(item => item.Item)
+            .ToArray();
+
+        if (inactiveItems.Length > 0)
+        {
+            await DeleteMobileTabItemsAsync(connection, transaction, inactiveItems, cancellationToken).ConfigureAwait(false);
+        }
+
+        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+        return inactiveItems.Length;
+    }
+
     public async Task<int> ReplacePointsOfInterestAsync(IReadOnlyList<PersistPointOfInterestRequest> requests, CancellationToken cancellationToken)
     {
         var connectionString = options.Value.SqlConnectionString;
@@ -529,6 +606,133 @@ WHERE s.StormType = 0
         return true;
     }
 
+    private static async Task<string> SyncStormCenterItemAsync(
+        SqlConnection connection,
+        DbTransaction transaction,
+        string stormName,
+        string stormIdentifier,
+        int regionType,
+        bool active,
+        CancellationToken cancellationToken)
+    {
+        var groupId = regionType switch
+        {
+            1 => 1,
+            2 => 2,
+            _ => throw new NotSupportedException($"Region type '{regionType}' does not have a storm-center mobile group."),
+        };
+
+        var url = $"{StormCenterImageBaseUrl}/{stormIdentifier}/GEOCOLOR/{stormIdentifier}-GEOCOLOR-1000x1000.gif";
+        var urlIdentifier = $"/FLOATER/{stormIdentifier}/";
+        var existingItems = (await connection.QueryAsync<MobileTabItemRow>(
+            new CommandDefinition(
+                @"
+SELECT MobileTabItemsID, MobileTabGroupID, URL, Text, ItemType
+FROM dbo.MobileTabItems
+WHERE MobileTabGroupID IN (1, 2)
+  AND CHARINDEX(@UrlIdentifier, URL) > 0
+ORDER BY MobileTabItemsID;",
+                new { UrlIdentifier = urlIdentifier },
+                transaction: transaction,
+                cancellationToken: cancellationToken)).ConfigureAwait(false)).ToList();
+
+        if (!active)
+        {
+            if (existingItems.Count == 0)
+            {
+                return "Unchanged";
+            }
+
+            await DeleteMobileTabItemsAsync(connection, transaction, existingItems, cancellationToken).ConfigureAwait(false);
+            return "Removed";
+        }
+
+        var text = $"{stormName} Center";
+        var existingItem = existingItems.FirstOrDefault();
+        if (existingItem is null)
+        {
+            await connection.ExecuteAsync(
+                new CommandDefinition(
+                    @"
+INSERT INTO dbo.MobileTabItems (MobileTabGroupID, URL, Text, ItemType)
+VALUES (@GroupId, @Url, @Text, 1);",
+                    new { GroupId = groupId, Url = url, Text = text },
+                    transaction: transaction,
+                    cancellationToken: cancellationToken)).ConfigureAwait(false);
+
+            return "Added";
+        }
+
+        var needsUpdate = existingItem.MobileTabGroupID != groupId
+            || !string.Equals(existingItem.URL, url, StringComparison.OrdinalIgnoreCase)
+            || !string.Equals(existingItem.Text, text, StringComparison.Ordinal)
+            || existingItem.ItemType != 1;
+
+        if (needsUpdate)
+        {
+            await connection.ExecuteAsync(
+                new CommandDefinition(
+                    @"
+UPDATE dbo.MobileTabItems
+SET MobileTabGroupID = @GroupId,
+    URL = @Url,
+    Text = @Text,
+    ItemType = 1
+WHERE MobileTabItemsID = @Id;",
+                    new { GroupId = groupId, Url = url, Text = text, Id = existingItem.MobileTabItemsID },
+                    transaction: transaction,
+                    cancellationToken: cancellationToken)).ConfigureAwait(false);
+        }
+
+        if (existingItems.Count > 1)
+        {
+            await DeleteMobileTabItemsAsync(connection, transaction, existingItems.Skip(1), cancellationToken).ConfigureAwait(false);
+        }
+
+        return needsUpdate || existingItems.Count > 1 ? "Updated" : "Unchanged";
+    }
+
+    private static async Task DeleteMobileTabItemsAsync(
+        SqlConnection connection,
+        DbTransaction transaction,
+        IEnumerable<MobileTabItemRow> items,
+        CancellationToken cancellationToken)
+    {
+        await connection.ExecuteAsync(
+            new CommandDefinition(
+                "DELETE FROM dbo.MobileTabItems WHERE MobileTabItemsID IN @Ids;",
+                new { Ids = items.Select(static item => item.MobileTabItemsID).ToArray() },
+                transaction: transaction,
+                cancellationToken: cancellationToken)).ConfigureAwait(false);
+    }
+
+    private static string? TryGetStormIdentifierFromUrl(string url)
+    {
+        const string marker = "/FLOATER/";
+        var markerIndex = url.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
+        if (markerIndex < 0)
+        {
+            return null;
+        }
+
+        var identifierStart = markerIndex + marker.Length;
+        var identifierEnd = url.IndexOf('/', identifierStart);
+        if (identifierEnd < 0)
+        {
+            return null;
+        }
+
+        var identifier = url[identifierStart..identifierEnd].ToUpperInvariant();
+        if (identifier.Length != 8
+            || identifier[0..2] is not ("AL" or "EP" or "CP")
+            || !identifier[2..].All(char.IsDigit))
+        {
+            return null;
+        }
+
+        return identifier;
+    }
+
     private static async Task<StormRow> InsertStormAsync(
         DbConnection connection,
         DbTransaction transaction,
@@ -582,6 +786,28 @@ WHERE s.StormType = 0
         public bool EmailAlertsSent { get; init; }
 
         public int StormType { get; init; }
+    }
+
+    private sealed record MobileTabItemRow
+    {
+        public int MobileTabItemsID { get; init; }
+
+        public int MobileTabGroupID { get; init; }
+
+        public string URL { get; init; } = string.Empty;
+
+        public string Text { get; init; } = string.Empty;
+
+        public int ItemType { get; init; }
+    }
+
+    private sealed record ActiveStormIdentityRow
+    {
+        public int StormNumber { get; init; }
+
+        public int Year { get; init; }
+
+        public int RegionType { get; init; }
     }
 
     private sealed record CoordinateRow

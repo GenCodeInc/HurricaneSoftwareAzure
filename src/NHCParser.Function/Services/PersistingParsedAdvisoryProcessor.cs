@@ -86,9 +86,10 @@ public sealed class PersistingParsedAdvisoryProcessor(INhcAdvisoryParser advisor
         var request = new PersistAdvisoryRequest
         {
             StormName = parsed.StormName,
+            StormIdentifier = parsed.StormIdentifier,
             StormNumber = parsed.StormNumber,
             AdvisoryNumber = parsed.AdvisoryNumber,
-            Year = parsed.IssuedAtUtc.Year,
+            Year = parsed.StormYear,
             RegionType = MapRegionType(parsed.Region),
             StormType = MapStormType(parsed.Current.StormType),
             IsFinalAdvisory = parsed.IsFinalAdvisory,
@@ -105,13 +106,14 @@ public sealed class PersistingParsedAdvisoryProcessor(INhcAdvisoryParser advisor
         var result = await tteRepository.PersistAdvisoryAsync(request, cancellationToken).ConfigureAwait(false);
 
         logger.LogInformation(
-            "Persistence result. Storm={StormName}. StormId={StormId}. StormCreated={StormCreated}. StormUpdated={StormUpdated}. CoordinateInserted={CoordinateInserted}. AdvisoryRowsUpdated={AdvisoryRowsUpdated}.",
+            "Persistence result. Storm={StormName}. StormId={StormId}. StormCreated={StormCreated}. StormUpdated={StormUpdated}. CoordinateInserted={CoordinateInserted}. AdvisoryRowsUpdated={AdvisoryRowsUpdated}. StormCenterItemAction={StormCenterItemAction}.",
             parsed.StormName,
             result.StormId,
             result.StormCreated,
             result.StormUpdated,
             result.CoordinateInserted,
-            result.AdvisoryRowsUpdated);
+            result.AdvisoryRowsUpdated,
+            result.StormCenterItemAction);
 
         if (parsed.Kind == NhcAdvisoryKind.Normal)
         {
@@ -134,7 +136,7 @@ public sealed class PersistingParsedAdvisoryProcessor(INhcAdvisoryParser advisor
                     {
                         StormName = parsed.StormName,
                         StormNumber = parsed.StormNumber,
-                        Year = parsed.IssuedAtUtc.Year,
+                        Year = parsed.StormYear,
                         RegionType = request.RegionType,
                         ForecastPoints = forecastPoints,
                     },

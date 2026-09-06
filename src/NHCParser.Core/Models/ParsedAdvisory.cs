@@ -8,7 +8,11 @@ public sealed class ParsedAdvisory
 
     public required string StormName { get; init; }
 
+    public required string StormIdentifier { get; init; }
+
     public required int StormNumber { get; init; }
+
+    public required int StormYear { get; init; }
 
     public required string AdvisoryNumber { get; init; }
 
